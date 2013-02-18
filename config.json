@@ -1,0 +1,8 @@
+{
+  "locals": {
+    "url": "http://localhost:8080",
+    "name": "Moongate",
+    "owner": "Guilherme Rodrigues",
+    "index_articles": 3
+  }
+}
