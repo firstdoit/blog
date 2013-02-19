@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>   
     <title>Moongate</title>
-    <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
-    <link>http://localhost:8080</link>
+    <atom:link href="http://moongate.se/feed.xml" rel="self" type="application/rss+xml"></atom:link>
+    <link>http://moongate.se</link>
     <description></description>
     <pubDate>Mon, 05 Nov 2012 00:00:00 -0200</pubDate>
     <generator>The mighty Wintersmith</generator>
     <language>en</language>
     <item>
       <title>You Won't Remember It: Note Everything Down Now</title>
-      <link>http://localhost:8080/articles/you-wont-remember-it/</link>
+      <link>http://moongate.se/articles/you-wont-remember-it/</link>
       <pubDate>Mon, 05 Nov 2012 00:00:00 -0200</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/articles/you-wont-remember-it/</guid>
+      <guid isPermaLink="true">http://moongate.se/articles/you-wont-remember-it/</guid>
       <author></author>
       <description>&lt;blockquote&gt;
 &lt;p&gt;That&apos;s okay, I&apos;ll remember it.
@@ -65,9 +65,9 @@
     </item>
     <item>
       <title>Benvenuto Node.js</title>
-      <link>http://localhost:8080/articles/benvenuto-node/</link>
+      <link>http://moongate.se/articles/benvenuto-node/</link>
       <pubDate>Sat, 20 Oct 2012 23:00:00 -0300</pubDate>
-      <guid isPermaLink="true">http://localhost:8080/articles/benvenuto-node/</guid>
+      <guid isPermaLink="true">http://moongate.se/articles/benvenuto-node/</guid>
       <author></author>
       <description>&lt;p&gt;&lt;strong&gt;Benvenuto&lt;/strong&gt; é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo do stack Java no stack Node.js.
 
