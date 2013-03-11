@@ -31,7 +31,7 @@
 
 &lt;/p&gt;
 &lt;h3&gt;Save a reference to your jqXHR object&lt;/h3&gt;
-&lt;p&gt;One of the common pitfalls of asynchronous communication is the lack of user feedback, &lt;em&gt;e.g.&lt;/em&gt;, no &lt;em&gt;loading&lt;/em&gt; hint is shown after a user presses a button that needs communication and/or processing. As a solution to this problem, the presenter recommends the following:
+&lt;p&gt;One of the common pitfalls of asynchronous communication is the lack of user feedback, &lt;em&gt;e.g.&lt;/em&gt;, no &lt;em&gt;loading&lt;/em&gt; hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:
 
 &lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$(&lt;span class=&quot;string&quot;&gt;&quot;a&quot;&lt;/span&gt;).one(&lt;span class=&quot;string&quot;&gt;&quot;click&quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (event) { 
