@@ -17,7 +17,7 @@ At a javascript developer conference, I feel there is no need to explain the use
 
 ### Save a reference to your jqXHR object
 
-One of the common pitfalls of asynchronous communication is the lack of user feedback, *e.g.*, no *loading* hint is shown after a user presses a button that needs communication and/or processing. As a solution to this problem, the presenter recommends the following:
+One of the common pitfalls of asynchronous communication is the lack of user feedback, *e.g.*, no *loading* hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:
 
     $("a").one("click", function (event) { 
         $.get("http://site.com", function (html) {
