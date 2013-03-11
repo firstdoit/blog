@@ -61,7 +61,7 @@ This, however, doesn't solve the UX problem. Which leads us to...
 
 Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of [MVC frameworks][6], [templating engines][7] and whatnot.
 
-One classic misuses of jQuery is adding an arbitrary `img` tag after an event:
+One of the classic misuses of jQuery is adding an arbitrary `img` tag after an event:
 
     $("a").one("click", function (event) {
     	var img = $("<img src='images/loading.gif'>");
