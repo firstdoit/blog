@@ -76,7 +76,7 @@ This, however, doesn&apos;t solve the UX problem. Which leads us to...
 &lt;p&gt;Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of &lt;a href=&quot;http://addyosmani.github.com/todomvc/&quot;&gt;MVC frameworks&lt;/a&gt;, &lt;a href=&quot;http://garann.github.com/template-chooser/&quot;&gt;templating engines&lt;/a&gt; and whatnot.
 
 &lt;/p&gt;
-&lt;p&gt;One classic misuses of jQuery is adding an arbitrary &lt;code&gt;img&lt;/code&gt; tag after an event:
+&lt;p&gt;One of the classic misuses of jQuery is adding an arbitrary &lt;code&gt;img&lt;/code&gt; tag after an event:
 
 &lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$(&lt;span class=&quot;string&quot;&gt;&quot;a&quot;&lt;/span&gt;).one(&lt;span class=&quot;string&quot;&gt;&quot;click&quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (event) {
