@@ -9,7 +9,7 @@
     <generator>The mighty Wintersmith</generator>
     <language>en</language>
     <item>
-      <title>&quot;Rio.JS and AJAX pitfalls pitfalls&quot;</title>
+      <title>Rio.JS and AJAX pitfalls pitfalls</title>
       <link>http://moongate.se/articles/rio-js-and-ajax-pitfalls-pitfalls/</link>
       <pubDate>Thu, 03 Oct 2013 00:00:00 -0300</pubDate>
       <guid isPermaLink="true">http://moongate.se/articles/rio-js-and-ajax-pitfalls-pitfalls/</guid>
@@ -127,7 +127,7 @@ $.when(firstAsyncCall, secondAsyncCall).done(function(result1, result2){
 &lt;p&gt;Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I&#8217;m looking forward for his next talk.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>&quot;You Won't Remember It: Note Everything Down Now&quot;</title>
+      <title>You Won't Remember It: Note Everything Down Now</title>
       <link>http://moongate.se/articles/you-wont-remember-it/</link>
       <pubDate>Mon, 05 Nov 2012 00:00:00 -0200</pubDate>
       <guid isPermaLink="true">http://moongate.se/articles/you-wont-remember-it/</guid>
