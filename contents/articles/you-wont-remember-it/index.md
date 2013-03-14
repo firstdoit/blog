@@ -1,4 +1,4 @@
-title: "You Won't Remember It: Note Everything Down Now"
+title: You Won't Remember It: Note Everything Down Now
 date: 11-05-2012
 template: article.jade
 author: gadr90

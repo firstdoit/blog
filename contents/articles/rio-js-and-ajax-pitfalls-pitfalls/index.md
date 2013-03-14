@@ -1,4 +1,4 @@
-title: "Rio.JS and AJAX pitfalls pitfalls"
+title: Rio.JS and AJAX pitfalls pitfalls
 date: 10-03-2013
 template: article.jade
 author: gadr90
