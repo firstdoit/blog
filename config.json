@@ -6,6 +6,6 @@
     "index_articles": 3
   },
   "plugins": [
-    "./node_modules/wintersmith-pandoc/"
+    "./node_modules/wintersmith-showdown/"
   ]
 }

@@ -4,7 +4,7 @@
   "description": "Personal blog.",
   "main": "index.html",
   "dependencies": {
-    "wintersmith-pandoc": "git+https://github.com/lhagan/wintersmith-pandoc.git"
+    "wintersmith-showdown": "git+https://github.com/gadr90/wintersmith-showdown.git"
   },
   "devDependencies": {},
   "scripts": {
