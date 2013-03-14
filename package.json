@@ -1,0 +1,21 @@
+{
+  "name": "blog",
+  "version": "0.1.0",
+  "description": "Personal blog.",
+  "main": "index.html",
+  "dependencies": {
+    "wintersmith-pandoc": "git+https://github.com/lhagan/wintersmith-pandoc.git"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gadr90/blog.git"
+  },
+  "author": "Guilherme Rodrigues",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "da6d46baef45ed1444bbfa296e1b8481c579d09b"
+}
