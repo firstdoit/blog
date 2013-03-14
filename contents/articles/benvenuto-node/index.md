@@ -3,19 +3,19 @@ date: 10-21-2012
 template: article.jade
 author: gadr90
 
-**Benvenuto** é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo do stack Java no stack Node.js.
+**Benvenuto** é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo da plataforma Java na plataforma Node.js.
 
 <span class="more"></span>
 
 <p style="text-align:center">Pontifícia Universidade do Rio de Janeiro</p>
 
-![Interface da Recepção](logo-puc-small.png)
+![](logo-puc-small.png)
 
 <br/>
 
 <p style="text-align:center">Departamento de Informática</p>
 
-![Interface da Recepção](logo-di-small.png)
+![](logo-di-small.png)
 
 <br/>
 
@@ -42,17 +42,17 @@ O sistema tem duas telas principais:
 <br/>
 <p style="text-align:center">Interface da Recepção</p>
 
-![Interface da Recepção](bn3.png)
+![](bn3.png)
 
 <br/>
 <p style="text-align:center">Interface do Salão</p>
 
-![Interface do Salão](bn4.png)
+![](bn4.png)
 
 <br/>
 
 Um requisito fundamental do sistema é que as atualizações sobre o mapa de mesas devem ser percebidas em *realtime* por todos os clients.
-A primeira versão do sistema foi construída usando um stack *semi-tradicional* de desenvolvimento web:
+A primeira versão do sistema foi construída usando um stack[^stack] *semi-tradicional*[^tradicional] de desenvolvimento web:
 
 - Play Framework 1.2 (2011) - um framework web *full-stack* Java, que utiliza o servidor JBoss Netty. Tem como principais objetivos a escalabilidade e simplicidade de desenvolvimento. Favorece aplicações "stateless" - não dá suporte a sessões.
 - PostgreSQL 9.0 (2010) - um banco de dados relacional SQL open-source.
@@ -63,7 +63,7 @@ Esse artigo irá discutir as vantagens e dificuldades encontradas ao realizar o 
 - Node.js (2011) - um *runtime* de Javascript no server-side. É *event-driven* e utiliza I/O assíncrono, com objetivo de maximizar a escalabilidade. Sua principal vantagem é permitir a utilização da mesma linguagem tanto no browser quanto no servidor. Isso implica em grandes facilidades para o desenvolvimento.
 - Express 3.0 (2012) - um framework web para Node.js.
 - Socket.IO - uma biblioteca para comunicação assíncrona no ambiente Node.js que expõe uma API de publish/subscribe transparente entre clientes e servidor.
-- CoffeeScript - uma pequena linguagem que *compila para* Javascript. Copia algumas linguagens mais recentes como Ruby e Python nos seus melhores pontos e esconde as piores partes do Javascript.
+- CoffeeScript - uma elegante linguagem que *compila para* Javascript. Copia algumas linguagens mais recentes como Ruby e Python nos seus melhores pontos e esconde as piores partes do Javascript.
 - Redis - Um banco de dados chave/valor extremamente rápido, em memória, voltado para datasets pequenos.
 
 ### Introdução
@@ -103,14 +103,14 @@ Recentemente, a tecnologia AJAX (Asynchronous JavaScript and XML) permitiu a com
 Uma das técnicas mais famosas é o *long-polling*. Ela consiste basicamente de três passos:
 
 - O browser faz um request AJAX para um endpoint no servidor.
-- O servidor *segura* esse request aberto enquanto nenhum evento significativo é gerado pela lógica de negócio
+- O servidor mantém esse request aberto enquanto nenhum evento significativo é gerado pela lógica de negócio
 - Quando um evento é gerado, o servidor responde para o browser, que reinicia o ciclo emitindo um novo request.
 
 Essa técnica é utilizada com sucesso pelo Benvenuto, mas ela é sujeita a alguns problemas:
 
 - Se um request AJAX é interrompido, não existe nenhum outro jeito do servidor notificar o cliente de novos eventos. Assim, a implementação deve ser resistente a quedas de conexão e saber reestabelecer o pedido sempre que ocorrerem problemas.
 - Browsers mobile estão sujeitos a muitas interrupções que podem parar requests AJAX, como entrar em modo *sleep*, recebimento de chamadas, etc.
-- O servidor deve saber lidar com as chamadas de forma eficiente para não trancar threads enquanto segura um request aberto.
+- O servidor deve saber lidar com as chamadas de forma eficiente para não manter threads ocupadas enquanto serve um request.
 
 Assim, é necessário grande cuidado ao implementar uma solução de long-polling.
 
@@ -129,7 +129,7 @@ As vantagens de utilizar o Node.js são muitas, especialmente ao considerar o qu
 
 Mas performance não é o único motivo para utilizar o Node.js. Ao utilizar a mesma linguagem no client e no servidor, é possível reutilizar código entre esses dois ambientes e diminuir a impedância entre eles. Menos conversões significa um código menor e mais focado em resolver os problemas de negócio.
 
-Uma outra notável qualidade do Node.js é sua comunidade e a organização de pacotes em torno do **npm** (node package manager). Inspirado nas *gems* do Ruby, o node já nasceu com o conceito de pacotes e a quantidade de bibliotecas open-source cresce em uma taxa frenética.
+Uma outra notável qualidade do Node.js é sua comunidade e a organização de pacotes em torno do **npm** (node package manager). Inspirado nas *gems* do Ruby, o node já nasceu com o conceito de pacotes e a quantidade de bibliotecas open-source cresce velozmente.
 
 Um desses pacotes é o excelente **Express**. Se trata de um framework para desenvolvimento de aplicativos web. Ele oferece um modelo simples para a criação rápida de aplicativos, solucionando muitos problemas comuns como autenticação, manipulação de cookies, etc. Atualmente é o framework web mais utilizado para Node.js.
 
@@ -139,7 +139,7 @@ Socket.IO é uma biblioteca que oferece comunicação realtime entre um servidor
 
 Uma vez conectado no servidor Node.js, um cliente pode se inscrever nos tópicos que lhe interessam e enviar mensagens em tópicos, assim como o servidor. Dessa forma, existe uma comunicação transparente entre as partes, independente de qualquer ciclo de request e response.
 
-Como canal de comunicação, o Socket.IO irá preferir utilizar [*WebSockets*][4] se possível, utilizando *fall-backs* como Flash ou long-polling se necessário. Todos os cuidados são tomados, entretanto, para garantir o recebimento das mensagens pelos clientes e pelo servidor, sem que o usuário da biblioteca tenha que se preocupar com problemas como interrupção de conexão.
+Como canal de comunicação, o Socket.IO irá preferir utilizar [*WebSockets*][4] se possível, utilizando *fallbacks*[^fallback] como Flash ou long-polling se necessário. Todos os cuidados são tomados, entretanto, para garantir o recebimento das mensagens pelos clientes e pelo servidor, sem que o usuário da biblioteca tenha que se preocupar com problemas como interrupção de conexão.
 
 A utilização do Socket.IO, portanto, traz benefícios óbvios para o Benvenuto pois descarta a necessidade de uma implementação própria de long-polling, disponibilizando uma forma eficiente e segura de trocar mensagens entre o servidor e os clientes.
 
@@ -156,11 +156,11 @@ O banco Redis beneficia o Benvenuto principalmente por simplificar a forma de ar
 
 Escolhidas as tecnologias que desejamos utilizar para escrever a nova versão do Benvenuto, resta a pergunta: Por onde começar?
 
-Ao tomar essa decisão, um ponto foi decisivo: a camada de apresentação deveria ser mantida basicamente imodificada - continuando a consumir JSON de uma API e apresentar a interface com a biblioteca KnockoutJS.
+Ao tomar essa decisão, um ponto foi decisivo: a camada de apresentação deveria ser mantida sem modificações - continuando a consumir JSON de uma API e apresentar a interface com a biblioteca KnockoutJS.
 
 Assim, o primeiro protótipo do aplicativo Benvenuto em Node.js consistiu de uma API *mock* que retornava apenas JSON estático. Para fazer isso, todas as chamadas que retornavam JSON no serviço antigo tiveram um *exemplar* de JSON recortado e guardado em um arquivo, que era lido e entregue pelo novo servidor.
 
-Feito isso, passava a ser necessário mimicar de fato o comportamento da API - permitindo, por exemplo, ocupação e liberação de lugares. Para tanto, uma variável em memória passou a guardar todo o JSON estático do mapa de mesas e a ser modificada pelas chamadas à API. O programa passou a apresentar o mesmo comportamento que o serviço antigo, em menos de 200 linhas de código.
+Feito isso, passava a ser necessário imitar de fato o comportamento da API - permitindo, por exemplo, ocupação e liberação de lugares. Para tanto, uma variável em memória passou a guardar todo o JSON estático do mapa de mesas e a ser modificada pelas chamadas à API. O programa passou a apresentar o mesmo comportamento que o serviço antigo, em menos de 200 linhas de código.
 
 Claro, nesse momento ainda não existe a persistência de objetos. A cada "reset" do aplicativo, o estado era perdido. Ainda assim, já é possível perceber que existe uma clara queda de complexidade no código do servidor.
 
@@ -267,7 +267,7 @@ Como se pode ver, a estrutura principal consiste em um array de *tables*, cada u
 
 A solução proposta foi inverter a estrutura - tornando *Place* o modelo principal. Ele é, afinal, o modelo que serve como referência para as ações de *ocupar* e *liberar*, por exemplo.
 
-Finalmente, foi necessário *desnormalizar* os atributos de *Table* dentro de cada *Place*. Isso incorre em um pequeno aumento do tamanho total necessário para representar o mapa de mesas, mas resolve o problema de múltiplas entidades. Um pequeno utilitário foi escrito transformar o formato antigo para o formato novo:
+Finalmente, foi necessário *desnormalizar*[^desnormalizar] os atributos de *Table* dentro de cada *Place*. Isso incorre em um pequeno aumento do tamanho total necessário para representar o mapa de mesas, mas resolve o problema de múltiplas entidades. Um pequeno utilitário foi escrito transformar o formato antigo para o formato novo:
 
 	(function() {
 	  var flatPlaces, places, placesC, _u;
@@ -403,10 +403,14 @@ A migração do Benvenuto culminou em muitas lições que, em última análise, 
 Claramente, Node.js e suas bibliotecas nasceram para solucionar os problemas de desenvolvimento web, e, por isso, oferecem soluções muito mais naturais.
 Na persistência, é evidente que, dada a possibilidade, bancos chave-valor em memória são escolhas muito mais sensíveis para uma melhor performance do aplicativo.
 
-Acredito que o stack Java ainda vá sobreviver um longo tempo pois ele tem, de fato, muitos méritos.
+Acredito que o stack Java ainda vá sobreviver um longo tempo pois ele tem, de fato, muitos méritos como performance, estabilidade e um enorme ecossistema de bibliotecas.
 Entretanto, empresas novas e pequenas devem focar seus esforços nas novas tecnologias, que oferecem soluções muito mais efetivas para os problemas reais da web hoje.
 A escolha entre novas e velhas tecnologias não é uma opção. Utilizar a linguagem e o ambiente que vai solucionar seu problema de forma mais simples é imperativo.
 
+[^stack]: A technology stack comprises the layers of components or services that are used to provide a software solution or application.
+[^tradicional]: No ambiente Java de 2011, JBoss Seam e Spring MVC seriam os frameworks já considerados "tradicionais", enquanto o Play Framework era relativamente novo e quebrava muitos paradigmas.
+[^fallback]: An alternative plan that may be used in an emergency. Nesse contexto, uma tecnologia menos elegante ou menos performática mas que cumpre o mesmo papel.
+[^desnormalizar]: Denormalization is the process of attempting to optimize the read performance of a database by adding redundant data or by grouping data.
 
 [1]: http://shootout.alioth.debian.org/u32/which-programs-are-fastest.php
 [2]: http://zgadzaj.com/benchmarking-nodejs-basic-performance-tests-against-apache-php

@@ -4,5 +4,8 @@
     "name": "Moongate",
     "owner": "Guilherme Rodrigues",
     "index_articles": 3
-  }
+  },
+  "plugins": [
+    "./node_modules/wintersmith-pandoc/"
+  ]
 }
