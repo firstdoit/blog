@@ -9,183 +9,116 @@
     <generator>The mighty Wintersmith</generator>
     <language>en</language>
     <item>
-      <title>Rio.JS and AJAX pitfalls pitfalls</title>
+      <title>&quot;Rio.JS and AJAX pitfalls pitfalls&quot;</title>
       <link>http://moongate.se/articles/rio-js-and-ajax-pitfalls-pitfalls/</link>
       <pubDate>Thu, 03 Oct 2013 00:00:00 -0300</pubDate>
       <guid isPermaLink="true">http://moongate.se/articles/rio-js-and-ajax-pitfalls-pitfalls/</guid>
       <author></author>
-      <description>&lt;p&gt;This saturday, I&apos;ve been to the &lt;a href=&quot;http://www.riojs.org/&quot;&gt;Rio.JS&lt;/a&gt; conference, a Rio de Janeiro-based Javascript developer event. I would like to congratulate the organizers for the effort, as I am sure that pulling such an event is no easy feat, and the formation of a local community is a noble intent. 
-
-&lt;/p&gt;
-&lt;p&gt;One of the presenters, &lt;a href=&quot;http://hugolnx.com/&quot;&gt;Hugo Roque&lt;/a&gt; asked for feedback on his &lt;a href=&quot;http://www.slideshare.net/hugolnx/apresentacao-17070731&quot;&gt;lecture&lt;/a&gt;. Here, I&apos;ll try and offer some opinions on his proposed solutions which I hope will be helpful.
-
-&lt;/p&gt;
-&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;
-
-&lt;/p&gt;
-&lt;p&gt;Let&apos;s start at the beginning.  
-
-&lt;/p&gt;
-&lt;h3&gt;If you suspect your public knows the basics of your subject, be quick presenting it.&lt;/h3&gt;
-&lt;p&gt;At a javascript developer conference, I feel there is no need to explain the uses or benefits of AJAX. This technology is sufficiently &lt;a href=&quot;http://en.wikipedia.org/wiki/Ajax_(programming)#History&quot;&gt;old and commonplace&lt;/a&gt; that the time would be better used with more advanced discussion.  
-
-&lt;/p&gt;
-&lt;h3&gt;Save a reference to your jqXHR object&lt;/h3&gt;
-&lt;p&gt;One of the common pitfalls of asynchronous communication is the lack of user feedback, &lt;em&gt;e.g.&lt;/em&gt;, no &lt;em&gt;loading&lt;/em&gt; hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:
-
-&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;$(&lt;span class=&quot;string&quot;&gt;&quot;a&quot;&lt;/span&gt;).one(&lt;span class=&quot;string&quot;&gt;&quot;click&quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (event) { 
-    $.get(&lt;span class=&quot;string&quot;&gt;&quot;http://site.com&quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (html) {
-        &lt;span class=&quot;comment&quot;&gt;//do something&lt;/span&gt;
+      <description>&lt;p&gt;This saturday, I’ve been to the &lt;a href=&quot;http://www.riojs.org/&quot;&gt;Rio.JS&lt;/a&gt; conference, a Rio de Janeiro-based Javascript developer event. I would like to congratulate the organizers for the effort, as I am sure that pulling such an event is no easy feat, and the formation of a local community is a noble intent.&lt;/p&gt;
+&lt;p&gt;One of the presenters, &lt;a href=&quot;http://hugolnx.com/&quot;&gt;Hugo Roque&lt;/a&gt; asked for feedback on his &lt;a href=&quot;http://www.slideshare.net/hugolnx/apresentacao-17070731&quot;&gt;lecture&lt;/a&gt;. Here, I’ll try and offer some opinions on his proposed solutions which I hope will be helpful.&lt;/p&gt;
+&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;
+&lt;p&gt;Let’s start at the beginning.&lt;/p&gt;
+&lt;h3 id=&quot;if-you-suspect-your-public-knows-the-basics-of-your-subject-be-quick-presenting-it.&quot;&gt;If you suspect your public knows the basics of your subject, be quick presenting it.&lt;/h3&gt;
+&lt;p&gt;At a javascript developer conference, I feel there is no need to explain the uses or benefits of AJAX. This technology is sufficiently &lt;a href=&quot;http://en.wikipedia.org/wiki/Ajax_(programming)#History&quot;&gt;old and commonplace&lt;/a&gt; that the time would be better used with more advanced discussion.&lt;/p&gt;
+&lt;h3 id=&quot;save-a-reference-to-your-jqxhr-object&quot;&gt;Save a reference to your jqXHR object&lt;/h3&gt;
+&lt;p&gt;One of the common pitfalls of asynchronous communication is the lack of user feedback, &lt;em&gt;e.g.&lt;/em&gt;, no &lt;em&gt;loading&lt;/em&gt; hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$(&quot;a&quot;).one(&quot;click&quot;, function (event) { 
+    $.get(&quot;http://site.com&quot;, function (html) {
+        //do something
     });
     event.preventDefault();
 });&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;According to the jQuery documentation, with the &lt;code&gt;one&lt;/code&gt; method,
-
-&lt;/p&gt;
+&lt;p&gt;According to the jQuery documentation, with the &lt;code&gt;one&lt;/code&gt; method,&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&quot;the handler is unbound after its first invocation.&quot;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This isn&apos;t very useful if your button is ever going to be clicked again. A nicer way to achieve the same effect is by saving a reference to the &lt;a href=&quot;http://api.jquery.com/jQuery.ajax/#jqXHR&quot;&gt;jqXHR&lt;/a&gt; object which is returned by any ajax call, and reacting to it&apos;s existence:
-
-&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; myRequestToken = undefined;
-$(&lt;span class=&quot;string&quot;&gt;'#my-button'&lt;/span&gt;).click(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (e) {
-    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (myRequestToken) {
-        &lt;span class=&quot;comment&quot;&gt;// There is a request going on - ignore this click.&lt;/span&gt;
-        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;;
+&lt;p&gt;This isn’t very useful if your button is ever going to be clicked again. A nicer way to achieve the same effect is by saving a reference to the &lt;a href=&quot;http://api.jquery.com/jQuery.ajax/#jqXHR&quot;&gt;jqXHR&lt;/a&gt; object which is returned by any ajax call, and reacting to it’s existence:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var myRequestToken = undefined;
+$(&#39;#my-button&#39;).click(function (e) {
+    if (myRequestToken) {
+        // There is a request going on - ignore this click.
+        return false;
     }
-    &lt;span class=&quot;comment&quot;&gt;// Save a reference to the jqXHR. It is also a promise! (more on that soon)&lt;/span&gt;
-    myRequestToken = $.get(&lt;span class=&quot;string&quot;&gt;'/promises/are/awesome/'&lt;/span&gt;);
+    // Save a reference to the jqXHR. It is also a promise! (more on that soon)
+    myRequestToken = $.get(&#39;/promises/are/awesome/&#39;);
 
-    &lt;span class=&quot;comment&quot;&gt;// After the request is done and returns the data successfuly, run this function.&lt;/span&gt;
-    myRequestToken.done(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (data) { 
-        &lt;span class=&quot;comment&quot;&gt;// Do something&lt;/span&gt;
+    // After the request is done and returns the data successfuly, run this function.
+    myRequestToken.done(function (data) { 
+        // Do something
     });
 
-    &lt;span class=&quot;comment&quot;&gt;// The request is complete - either with success or failure. &lt;/span&gt;
-    &lt;span class=&quot;comment&quot;&gt;// Anyway, clean the reference and enable a new click.        &lt;/span&gt;
-    myRequestToken.always(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (data) {
+    // The request is complete - either with success or failure. 
+    // Anyway, clean the reference and enable a new click.        
+    myRequestToken.always(function (data) {
         myRequestToken = undefined;
     });    
 });&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In this fashion, we have enabled the button to be clicked again after any communication is done. 
-This, however, doesn&apos;t solve the UX problem. Which leads us to...
-
-
-&lt;/p&gt;
-&lt;h3&gt;Be economic with your DOM manipulation&lt;/h3&gt;
-&lt;p&gt;Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of &lt;a href=&quot;http://addyosmani.github.com/todomvc/&quot;&gt;MVC frameworks&lt;/a&gt;, &lt;a href=&quot;http://garann.github.com/template-chooser/&quot;&gt;templating engines&lt;/a&gt; and whatnot.
-
-&lt;/p&gt;
-&lt;p&gt;One of the classic misuses of jQuery is adding an arbitrary &lt;code&gt;img&lt;/code&gt; tag after an event:
-
-&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;$(&lt;span class=&quot;string&quot;&gt;&quot;a&quot;&lt;/span&gt;).one(&lt;span class=&quot;string&quot;&gt;&quot;click&quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (event) {
-    &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; img = $(&lt;span class=&quot;string&quot;&gt;&quot;&lt;img src='images/loading.gif'&gt;&quot;&lt;/span&gt;);
+&lt;p&gt;In this fashion, we have enabled the button to be clicked again after any communication is done. This, however, doesn’t solve the UX problem. Which leads us to…&lt;/p&gt;
+&lt;h3 id=&quot;be-economic-with-your-dom-manipulation&quot;&gt;Be economic with your DOM manipulation&lt;/h3&gt;
+&lt;p&gt;Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of &lt;a href=&quot;http://addyosmani.github.com/todomvc/&quot;&gt;MVC frameworks&lt;/a&gt;, &lt;a href=&quot;http://garann.github.com/template-chooser/&quot;&gt;templating engines&lt;/a&gt; and whatnot.&lt;/p&gt;
+&lt;p&gt;One of the classic misuses of jQuery is adding an arbitrary &lt;code&gt;img&lt;/code&gt; tag after an event:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$(&quot;a&quot;).one(&quot;click&quot;, function (event) {
+    var img = $(&quot;&lt;img src=&#39;images/loading.gif&#39;&gt;&quot;);
     img.appendTo(document.body);
-    $.get(&lt;span class=&quot;string&quot;&gt;&quot;http://site.com&quot;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; () {
-        &lt;span class=&quot;comment&quot;&gt;// faz alguma coisa&lt;/span&gt;
+    $.get(&quot;http://site.com&quot;, function () {
+        // faz alguma coisa
         img.remove();
     });
 });&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This has the added disadvantage of starting to load the image only after the node is appended. That means a user on a slow connection will continue to receive no feedback on your ajax button, because the loading image will not appear until it itself is loaded. 
-
-&lt;/p&gt;
-&lt;p&gt;The solution can be, in fact, much simpler: 
-
-&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&lt;span class=&quot;comment&quot;&gt;// CSS&lt;/span&gt;
+&lt;p&gt;This has the added disadvantage of starting to load the image only after the node is appended. That means a user on a slow connection will continue to receive no feedback on your ajax button, because the loading image will not appear until it itself is loaded.&lt;/p&gt;
+&lt;p&gt;The solution can be, in fact, much simpler:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// CSS
 .hide { display: none; }
 .active { display: block; }
 
-&lt;span class=&quot;comment&quot;&gt;// In the DOM&lt;/span&gt;
-&lt;img src=&lt;span class=&quot;string&quot;&gt;&quot;images/loading.gif&quot;&lt;/span&gt; id=&lt;span class=&quot;string&quot;&gt;&quot;my-button-spinner&quot;&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;hide&quot;&lt;/span&gt;/&gt;
+// In the DOM
+&lt;img src=&quot;images/loading.gif&quot; id=&quot;my-button-spinner&quot; class=&quot;hide&quot;/&gt;
 
-&lt;span class=&quot;comment&quot;&gt;// Activate loading&lt;/span&gt;
-$(&lt;span class=&quot;string&quot;&gt;'#my-button-spinner'&lt;/span&gt;).addClass(&lt;span class=&quot;string&quot;&gt;'active'&lt;/span&gt;);
+// Activate loading
+$(&#39;#my-button-spinner&#39;).addClass(&#39;active&#39;);
 
-&lt;span class=&quot;comment&quot;&gt;// Hide loading&lt;/span&gt;
-$(&lt;span class=&quot;string&quot;&gt;'#my-button-spinner'&lt;/span&gt;).removeClass(&lt;span class=&quot;string&quot;&gt;'active'&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This is, of course, considering you are not using one of the template or MVC frameworks which will present their own solutions.
-
-
-&lt;/p&gt;
-&lt;h3&gt;Use Promises, not callbacks.&lt;/h3&gt;
-&lt;p&gt;One of the &quot;recent&quot; advancements in the Javascript is the growing usage of the &lt;a href=&quot;http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/&quot;&gt;Promises&lt;/a&gt; pattern. There is a plethora of tutorials and implementations to be found by Googling, and I suggest you get up to speed if you haven&apos;t so far.
-
-&lt;/p&gt;
-&lt;p&gt;Promises can be found in lots of places - including jQuery. In fact, the &lt;code&gt;jqXHR&lt;/code&gt; implements a Promise interface. This enables us to do some interesting things with it:
-
-&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; firstAsyncCall = $.get(&lt;span class=&quot;string&quot;&gt;'/some/info/1'&lt;/span&gt;);
-&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; secondAsyncCall = $.get(&lt;span class=&quot;string&quot;&gt;'/some/info/2'&lt;/span&gt;);
-&lt;span class=&quot;comment&quot;&gt;// Only act when both calls are completed successfully!&lt;/span&gt;
-$.when(firstAsyncCall, secondAsyncCall).done(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(result1, result2){
-    &lt;span class=&quot;comment&quot;&gt;// Act on both results.&lt;/span&gt;
+// Hide loading
+$(&#39;#my-button-spinner&#39;).removeClass(&#39;active&#39;);&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is, of course, considering you are not using one of the template or MVC frameworks which will present their own solutions.&lt;/p&gt;
+&lt;h3 id=&quot;use-promises-not-callbacks.&quot;&gt;Use Promises, not callbacks.&lt;/h3&gt;
+&lt;p&gt;One of the “recent” advancements in the Javascript is the growing usage of the &lt;a href=&quot;http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/&quot;&gt;Promises&lt;/a&gt; pattern. There is a plethora of tutorials and implementations to be found by Googling, and I suggest you get up to speed if you haven’t so far.&lt;/p&gt;
+&lt;p&gt;Promises can be found in lots of places - including jQuery. In fact, the &lt;code&gt;jqXHR&lt;/code&gt; implements a Promise interface. This enables us to do some interesting things with it:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var firstAsyncCall = $.get(&#39;/some/info/1&#39;);
+var secondAsyncCall = $.get(&#39;/some/info/2&#39;);
+// Only act when both calls are completed successfully!
+$.when(firstAsyncCall, secondAsyncCall).done(function(result1, result2){
+    // Act on both results.
 });&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This is but a simple example of what you can accomplish with promises. So, stop using &lt;code&gt;success&lt;/code&gt; and &lt;code&gt;error&lt;/code&gt; callbacks and get to know the &lt;code&gt;done&lt;/code&gt;, &lt;code&gt;fail&lt;/code&gt; and &lt;code&gt;always&lt;/code&gt; family of methods in the jqXHR.
-
-
-&lt;/p&gt;
-&lt;h3&gt;Conclusion&lt;/h3&gt;
-&lt;p&gt;Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I&apos;m looking forward for his next talk.
-
-
-&lt;/p&gt;
+&lt;p&gt;This is but a simple example of what you can accomplish with promises. So, stop using &lt;code&gt;success&lt;/code&gt; and &lt;code&gt;error&lt;/code&gt; callbacks and get to know the &lt;code&gt;done&lt;/code&gt;, &lt;code&gt;fail&lt;/code&gt; and &lt;code&gt;always&lt;/code&gt; family of methods in the jqXHR.&lt;/p&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I’m looking forward for his next talk.&lt;/p&gt;
 </description>
     </item>
     <item>
-      <title>You Won't Remember It: Note Everything Down Now</title>
+      <title>&quot;You Won't Remember It: Note Everything Down Now&quot;</title>
       <link>http://moongate.se/articles/you-wont-remember-it/</link>
       <pubDate>Mon, 05 Nov 2012 00:00:00 -0200</pubDate>
       <guid isPermaLink="true">http://moongate.se/articles/you-wont-remember-it/</guid>
       <author></author>
       <description>&lt;blockquote&gt;
-&lt;p&gt;That&apos;s okay, I&apos;ll remember it.
-
-&lt;/p&gt;
+&lt;p&gt;That’s okay, I’ll remember it.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;And yet, you forgot it. The only way to never forget anything is using a &lt;em&gt;mind extension&lt;/em&gt;. This is any tool (or combination of) which you use to hold &lt;strong&gt;everything&lt;/strong&gt; that you must keep in mind. From pen &amp; paper to &lt;a href=&quot;https://workflowy.com/&quot;&gt;Workflowy&lt;/a&gt;, here are the key points to succesfully managing it.
-
-&lt;/p&gt;
-&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;
-
-&lt;/p&gt;
-&lt;h3&gt;The case for using a mind extension&lt;/h3&gt;
-&lt;p&gt;You simply can&apos;t trust your brain with everything. That&apos;s OK, you don&apos;t have ADHD. We simply &lt;a href=&quot;http://en.wikipedia.org/wiki/Information_overload&quot;&gt;deal with a lot of information&lt;/a&gt;, and have &lt;a href=&quot;http://bigthink.com/endless-innovation/information-overload-there-has-always-been-too-much-to-know&quot;&gt;always done so&lt;/a&gt;.
-
-&lt;/p&gt;
-&lt;p&gt;Trying to remember everything is not only frustrating: it is a sure way to missing opportunities and generally &lt;em&gt;wasting time&lt;/em&gt;.
-
-&lt;/p&gt;
-&lt;p&gt;But buying into a tool is not enough. Using it correctly is key, and these are the tips that help me do so everyday.
-
-
-&lt;/p&gt;
-&lt;h4&gt;Note down absolutely everything&lt;/h4&gt;
-&lt;p&gt;Never wonder if you should write something down. Simply do. Taking the burden off of your brain is the first step to organization.
-
-&lt;/p&gt;
-&lt;h4&gt;Stop meta-time-wasting&lt;/h4&gt;
-&lt;p&gt;Meta-time-wasting is wasting time hunting the golden productivity tool which will solve all your problems. Unfortunately, there is &lt;em&gt;no such thing&lt;/em&gt;. Use whichever tool is the simplest and offers lowest friction. The important thing is to...
-
-&lt;/p&gt;
-&lt;h4&gt;Have discipline&lt;/h4&gt;
-&lt;p&gt;No matter how many incredible tools or gadgets you use, none of them is going to actually make you write things down. You must discipline yourself to update your extended mind whenever a new task arises (or gets completed). This will take time: don&apos;t get disappointed in yourself for not having a flawless score the first few weeks.
-
-&lt;/p&gt;
-&lt;h4&gt;Check your mind extension regularly&lt;/h4&gt;
-&lt;p&gt;There&apos;s is no use in having an extra memory if you are not aware of it. During the day, check to see if there&apos;s anything more you could do right now. Also, many tools have reminders of all sorts to help you remember at the right time.
-
-&lt;/p&gt;
-&lt;h4&gt;Plan for the next day or next week&lt;/h4&gt;
-&lt;p&gt;At the end of each day, or week, set your goals for the next period. Assess if your planning for the past period was accurate and decide which tasks you&apos;ll be able to accomplish next.
-
-&lt;/p&gt;
-&lt;h4&gt;Big projects: divide and conquer&lt;/h4&gt;
-&lt;p&gt;Monumental tasks are too intimidating. Instead, &lt;a href=&quot;http://37signals.com/svn/posts/3304-follow-the-goal-creep&quot;&gt;follow the goal creep&lt;/a&gt; and divide it in smaller, manageable chunks, each with a visible deadline.
-
-
-&lt;/p&gt;
+&lt;p&gt;And yet, you forgot it. The only way to never forget anything is using a &lt;em&gt;mind extension&lt;/em&gt;. This is any tool (or combination of) which you use to hold &lt;strong&gt;everything&lt;/strong&gt; that you must keep in mind. From pen &amp; paper to &lt;a href=&quot;https://workflowy.com/&quot;&gt;Workflowy&lt;/a&gt;, here are the key points to succesfully managing it.&lt;/p&gt;
+&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;
+&lt;h3 id=&quot;the-case-for-using-a-mind-extension&quot;&gt;The case for using a mind extension&lt;/h3&gt;
+&lt;p&gt;You simply can’t trust your brain with everything. That’s OK, you don’t have ADHD. We simply &lt;a href=&quot;http://en.wikipedia.org/wiki/Information_overload&quot;&gt;deal with a lot of information&lt;/a&gt;, and have &lt;a href=&quot;http://bigthink.com/endless-innovation/information-overload-there-has-always-been-too-much-to-know&quot;&gt;always done so&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Trying to remember everything is not only frustrating: it is a sure way to missing opportunities and generally &lt;em&gt;wasting time&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;But buying into a tool is not enough. Using it correctly is key, and these are the tips that help me do so everyday.&lt;/p&gt;
+&lt;h4 id=&quot;note-down-absolutely-everything&quot;&gt;Note down absolutely everything&lt;/h4&gt;
+&lt;p&gt;Never wonder if you should write something down. Simply do. Taking the burden off of your brain is the first step to organization.&lt;/p&gt;
+&lt;h4 id=&quot;stop-meta-time-wasting&quot;&gt;Stop meta-time-wasting&lt;/h4&gt;
+&lt;p&gt;Meta-time-wasting is wasting time hunting the golden productivity tool which will solve all your problems. Unfortunately, there is &lt;em&gt;no such thing&lt;/em&gt;. Use whichever tool is the simplest and offers lowest friction. The important thing is to…&lt;/p&gt;
+&lt;h4 id=&quot;have-discipline&quot;&gt;Have discipline&lt;/h4&gt;
+&lt;p&gt;No matter how many incredible tools or gadgets you use, none of them is going to actually make you write things down. You must discipline yourself to update your extended mind whenever a new task arises (or gets completed). This will take time: don’t get disappointed in yourself for not having a flawless score the first few weeks.&lt;/p&gt;
+&lt;h4 id=&quot;check-your-mind-extension-regularly&quot;&gt;Check your mind extension regularly&lt;/h4&gt;
+&lt;p&gt;There’s is no use in having an extra memory if you are not aware of it. During the day, check to see if there’s anything more you could do right now. Also, many tools have reminders of all sorts to help you remember at the right time.&lt;/p&gt;
+&lt;h4 id=&quot;plan-for-the-next-day-or-next-week&quot;&gt;Plan for the next day or next week&lt;/h4&gt;
+&lt;p&gt;At the end of each day, or week, set your goals for the next period. Assess if your planning for the past period was accurate and decide which tasks you’ll be able to accomplish next.&lt;/p&gt;
+&lt;h4 id=&quot;big-projects-divide-and-conquer&quot;&gt;Big projects: divide and conquer&lt;/h4&gt;
+&lt;p&gt;Monumental tasks are too intimidating. Instead, &lt;a href=&quot;http://37signals.com/svn/posts/3304-follow-the-goal-creep&quot;&gt;follow the goal creep&lt;/a&gt; and divide it in smaller, manageable chunks, each with a visible deadline.&lt;/p&gt;
 </description>
     </item>
     <item>
@@ -194,109 +127,97 @@ $.when(firstAsyncCall, secondAsyncCall).done(&lt;span class=&quot;keyword&quot;&
       <pubDate>Sat, 20 Oct 2012 23:00:00 -0300</pubDate>
       <guid isPermaLink="true">http://moongate.se/articles/benvenuto-node/</guid>
       <author></author>
-      <description>&lt;p&gt;&lt;strong&gt;Benvenuto&lt;/strong&gt; é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo do stack Java no stack Node.js.
-
+      <description>&lt;p&gt;&lt;strong&gt;Benvenuto&lt;/strong&gt; é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo da plataforma Java na plataforma Node.js.&lt;/p&gt;
+&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+Pontifícia Universidade do Rio de Janeiro
 &lt;/p&gt;
-&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;
 
-&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;Pontifícia Universidade do Rio de Janeiro&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;logo-puc-small.png&quot; alt=&quot;Interface da Recepção&quot;&gt;
-
-&lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-
-&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;Departamento de Informática&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;logo-di-small.png&quot; alt=&quot;Interface da Recepção&quot;&gt;
-
-&lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-
-&lt;/p&gt;
-&lt;h2 style=&quot;text-align:center&quot;&gt;Benvenuto Node&lt;/h2&gt;
-
-&lt;p&gt;&lt;h4 style=&quot;text-align:center&quot;&gt;Estudo de caso: Migração de um Web-App Java para Node.js&lt;/h3&gt;&lt;/p&gt;
-
-&lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;Orientador:&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Edmundo Torreão&lt;/strong&gt;&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;Aluno:&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Guilherme Rodrigues&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;6 de Dezembro de 2012&lt;/p&gt;
+&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;http://moongate.se/articles/benvenuto-node/logo-puc-small.png&quot; /&gt;&lt;p class=&quot;caption&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
 &lt;br/&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+Departamento de Informática
+&lt;/p&gt;
 
-&lt;strong&gt;Benvenuto&lt;/strong&gt; é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo do stack Java no stack Node.js.
+&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;http://moongate.se/articles/benvenuto-node/logo-di-small.png&quot; /&gt;&lt;p class=&quot;caption&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;br/&gt;
+&lt;h2 style=&quot;text-align:center&quot;&gt;
+Benvenuto Node
+&lt;/h2&gt;
 
-O sistema tem duas telas principais:
-
-- Um mapa de mesas, no qual todas as mesas são desenhadas na tela na cor verde ou vermelha, dependendo se a mesa está atualmente livre ou ocupada. Aqui, pode-se selecionar mesas e ocupá-las.
-- Uma lista de mesas atualmente ocupadas, onde as mesas têm uma indicação de cor dependendo de há quanto tempo estão ocupadas. Aqui, pode-se selecionar mesas e liberá-las.
+&lt;h4 style=&quot;text-align:center&quot;&gt;
+Estudo de caso: Migração de um Web-App Java para Node.js
+&lt;/h3&gt;&lt;/p&gt;
 
 &lt;br/&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;Interface da Recepção&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;bn3.png&quot; alt=&quot;Interface da Recepção&quot;&gt;
-
+&lt;p style=&quot;text-align:center&quot;&gt;
+Orientador:
 &lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+&lt;strong&gt;Edmundo Torreão&lt;/strong&gt;
 &lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;Interface do Salão&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;bn4.png&quot; alt=&quot;Interface do Salão&quot;&gt;
-
+&lt;p style=&quot;text-align:center&quot;&gt;
+Aluno:
 &lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-
+&lt;p style=&quot;text-align:center&quot;&gt;
+&lt;strong&gt;Guilherme Rodrigues&lt;/strong&gt;
 &lt;/p&gt;
-&lt;p&gt;Um requisito fundamental do sistema é que as atualizações sobre o mapa de mesas devem ser percebidas em &lt;em&gt;realtime&lt;/em&gt; por todos os clients.
-A primeira versão do sistema foi construída usando um stack &lt;em&gt;semi-tradicional&lt;/em&gt; de desenvolvimento web:
 
+&lt;p style=&quot;text-align:center&quot;&gt;
+6 de Dezembro de 2012
 &lt;/p&gt;
+&lt;br/&gt;
+&lt;p&gt;&lt;strong&gt;Benvenuto&lt;/strong&gt; é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo do stack Java no stack Node.js.&lt;/p&gt;
+&lt;p&gt;O sistema tem duas telas principais:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Play Framework 1.2 (2011) - um framework web &lt;em&gt;full-stack&lt;/em&gt; Java, que utiliza o servidor JBoss Netty. Tem como principais objetivos a escalabilidade e simplicidade de desenvolvimento. Favorece aplicações &quot;stateless&quot; - não dá suporte a sessões.&lt;/li&gt;
+&lt;li&gt;Um mapa de mesas, no qual todas as mesas são desenhadas na tela na cor verde ou vermelha, dependendo se a mesa está atualmente livre ou ocupada. Aqui, pode-se selecionar mesas e ocupá-las.&lt;/li&gt;
+&lt;li&gt;Uma lista de mesas atualmente ocupadas, onde as mesas têm uma indicação de cor dependendo de há quanto tempo estão ocupadas. Aqui, pode-se selecionar mesas e liberá-las.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br/&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+Interface da Recepção
+&lt;/p&gt;
+
+&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;http://moongate.se/articles/benvenuto-node/bn3.png&quot; /&gt;&lt;p class=&quot;caption&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;br/&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+Interface do Salão
+&lt;/p&gt;
+
+&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;http://moongate.se/articles/benvenuto-node/bn4.png&quot; /&gt;&lt;p class=&quot;caption&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;br/&gt;
+&lt;p&gt;Um requisito fundamental do sistema é que as atualizações sobre o mapa de mesas devem ser percebidas em &lt;em&gt;realtime&lt;/em&gt; por todos os clients. A primeira versão do sistema foi construída usando um stack&lt;sup&gt;&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fn1&quot; class=&quot;footnoteRef&quot; id=&quot;fnref1&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;em&gt;semi-tradicional&lt;/em&gt;&lt;sup&gt;&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fn2&quot; class=&quot;footnoteRef&quot; id=&quot;fnref2&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; de desenvolvimento web:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Play Framework 1.2 (2011) - um framework web &lt;em&gt;full-stack&lt;/em&gt; Java, que utiliza o servidor JBoss Netty. Tem como principais objetivos a escalabilidade e simplicidade de desenvolvimento. Favorece aplicações “stateless” - não dá suporte a sessões.&lt;/li&gt;
 &lt;li&gt;PostgreSQL 9.0 (2010) - um banco de dados relacional SQL open-source.&lt;/li&gt;
 &lt;li&gt;KnockoutJS 2.0 (2011) - uma biblioteca Javascript que implementa o padrão MVVM, permitindo &lt;em&gt;data-bind&lt;/em&gt; entre objetos Javascript e o DOM, eliminando a necessidade de grandes quantidades de código JQuery para dinamizar a interface.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Esse artigo irá discutir as vantagens e dificuldades encontradas ao realizar o port deste aplicativo para um stack de tecnologias mais recentes e mais orientadas a &lt;em&gt;single-page applications&lt;/em&gt;. O stack escolhido foi:
-
-&lt;/p&gt;
+&lt;p&gt;Esse artigo irá discutir as vantagens e dificuldades encontradas ao realizar o port deste aplicativo para um stack de tecnologias mais recentes e mais orientadas a &lt;em&gt;single-page applications&lt;/em&gt;. O stack escolhido foi:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Node.js (2011) - um &lt;em&gt;runtime&lt;/em&gt; de Javascript no server-side. É &lt;em&gt;event-driven&lt;/em&gt; e utiliza I/O assíncrono, com objetivo de maximizar a escalabilidade. Sua principal vantagem é permitir a utilização da mesma linguagem tanto no browser quanto no servidor. Isso implica em grandes facilidades para o desenvolvimento.&lt;/li&gt;
 &lt;li&gt;Express 3.0 (2012) - um framework web para Node.js.&lt;/li&gt;
 &lt;li&gt;Socket.IO - uma biblioteca para comunicação assíncrona no ambiente Node.js que expõe uma API de publish/subscribe transparente entre clientes e servidor.&lt;/li&gt;
-&lt;li&gt;CoffeeScript - uma pequena linguagem que &lt;em&gt;compila para&lt;/em&gt; Javascript. Copia algumas linguagens mais recentes como Ruby e Python nos seus melhores pontos e esconde as piores partes do Javascript.&lt;/li&gt;
+&lt;li&gt;CoffeeScript - uma elegante linguagem que &lt;em&gt;compila para&lt;/em&gt; Javascript. Copia algumas linguagens mais recentes como Ruby e Python nos seus melhores pontos e esconde as piores partes do Javascript.&lt;/li&gt;
 &lt;li&gt;Redis - Um banco de dados chave/valor extremamente rápido, em memória, voltado para datasets pequenos.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;Introdução&lt;/h3&gt;
-&lt;h3&gt;Parte 1 - Motivação e Principais Dificuldades&lt;/h3&gt;
-&lt;h4&gt;ORM e a dança de formatos&lt;/h4&gt;
-&lt;p&gt;Ao desenvolver um aplicativo &quot;desktop&quot;, o arquiteto de software tem total controle sobre todas as partes do sistema: a persistência, a lógica de negócio e a visualização e interação.
-
-&lt;/p&gt;
-&lt;p&gt;Naturalmente, é comum utilizar-se de apenas uma linguagem de programação para escrever todas as partes de um aplicativo, a fim de minizar a complexidade de comunicação entre os módulos ou partes do sistema. Entretanto, ao escrever aplicativos web, tipicamente encontram-se algumas severas restrições.
-
-&lt;/p&gt;
-&lt;p&gt;Uma das maiores restrições é aquela inerente da &lt;em&gt;visualização&lt;/em&gt; e &lt;em&gt;interação com o usuário&lt;/em&gt;, que serão necessariamente expressas através de um documento HTML e um &lt;em&gt;web browser&lt;/em&gt;. Dessa forma, introduz-se, no mínimo, um nível de tradução entre a lógica de negócio, escrito em alguma linguagem, e a apresentação.
-
-&lt;/p&gt;
-&lt;p&gt;Tipicamente, os aplicativos web modernos se utilizam ainda de Javascript para dinamizar o conteúdo do documento HTML e permitir interações mais naturais, independentes do ciclo de request e response.
-
-&lt;/p&gt;
-&lt;p&gt;Uma outra restrição é a comum necessidade de escalabilidade e utilização multi-usuário do sistema. Isso prejudica a escolha de ferramentas de persistência mais simples e diretamente disponíveis nas linguagens (como, em Java, a serialização de objetos). A escolha mais comum para persistência é um banco de dados relacional, como MySQL, PostgreSQL e outros.
-
-&lt;/p&gt;
-&lt;p&gt;Assim, introduz-se mais um nível de tradução no aplicativo: a camada de persistência representa os objetos de negócio de uma forma diferente da camada de lógica de negócio, e um componente de &lt;em&gt;ORM&lt;/em&gt; (Object Relational Mapping) é utilizado para facilitar essa conversão.
-
-&lt;/p&gt;
-&lt;p&gt;Configura-se, então, a &lt;em&gt;dança dos formatos&lt;/em&gt;: no ciclo de vida típico de um objeto, ele vai ser:
-
-&lt;/p&gt;
+&lt;h3 id=&quot;introdução&quot;&gt;Introdução&lt;/h3&gt;
+&lt;h3 id=&quot;parte-1---motivação-e-principais-dificuldades&quot;&gt;Parte 1 - Motivação e Principais Dificuldades&lt;/h3&gt;
+&lt;h4 id=&quot;orm-e-a-dança-de-formatos&quot;&gt;ORM e a dança de formatos&lt;/h4&gt;
+&lt;p&gt;Ao desenvolver um aplicativo “desktop”, o arquiteto de software tem total controle sobre todas as partes do sistema: a persistência, a lógica de negócio e a visualização e interação.&lt;/p&gt;
+&lt;p&gt;Naturalmente, é comum utilizar-se de apenas uma linguagem de programação para escrever todas as partes de um aplicativo, a fim de minizar a complexidade de comunicação entre os módulos ou partes do sistema. Entretanto, ao escrever aplicativos web, tipicamente encontram-se algumas severas restrições.&lt;/p&gt;
+&lt;p&gt;Uma das maiores restrições é aquela inerente da &lt;em&gt;visualização&lt;/em&gt; e &lt;em&gt;interação com o usuário&lt;/em&gt;, que serão necessariamente expressas através de um documento HTML e um &lt;em&gt;web browser&lt;/em&gt;. Dessa forma, introduz-se, no mínimo, um nível de tradução entre a lógica de negócio, escrito em alguma linguagem, e a apresentação.&lt;/p&gt;
+&lt;p&gt;Tipicamente, os aplicativos web modernos se utilizam ainda de Javascript para dinamizar o conteúdo do documento HTML e permitir interações mais naturais, independentes do ciclo de request e response.&lt;/p&gt;
+&lt;p&gt;Uma outra restrição é a comum necessidade de escalabilidade e utilização multi-usuário do sistema. Isso prejudica a escolha de ferramentas de persistência mais simples e diretamente disponíveis nas linguagens (como, em Java, a serialização de objetos). A escolha mais comum para persistência é um banco de dados relacional, como MySQL, PostgreSQL e outros.&lt;/p&gt;
+&lt;p&gt;Assim, introduz-se mais um nível de tradução no aplicativo: a camada de persistência representa os objetos de negócio de uma forma diferente da camada de lógica de negócio, e um componente de &lt;em&gt;ORM&lt;/em&gt; (Object Relational Mapping) é utilizado para facilitar essa conversão.&lt;/p&gt;
+&lt;p&gt;Configura-se, então, a &lt;em&gt;dança dos formatos&lt;/em&gt;: no ciclo de vida típico de um objeto, ele vai ser:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Recuperado de uma tabela de banco de dados relacional&lt;/li&gt;
 &lt;li&gt;Transformado em um objeto na linguagem de programação utilizada, o qual também apresenta comportamentos e possivelmente manipulará os seus dados ou de outros objetos&lt;/li&gt;
@@ -304,363 +225,265 @@ A primeira versão do sistema foi construída usando um stack &lt;em&gt;semi-tra
 &lt;li&gt;Transformado em um objeto Javascript para permitir uma interação dinâmica.&lt;/li&gt;
 &lt;li&gt;Finalmente, fará todo o caminho de volta até sua tabela relacional.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Todas essas transformações implicam em grande quantidade de código que não se presta diretamente a solucionar os problemas de negócio os quais se propõe resolver o aplicativo.
-
-&lt;/p&gt;
-&lt;h4&gt;Comunicação Realtime - Long polling&lt;/h4&gt;
-&lt;p&gt;Muitos aplicativos têm por requisito a comunicação em tempo real entre múltiplos clientes. Até pouco tempo atrás, isso não era possível no ambiente web devido à precariedade dos browsers, e aplicativos tempo real eram tipicamente &lt;em&gt;desktop&lt;/em&gt;.
-
-&lt;/p&gt;
-&lt;p&gt;Recentemente, a tecnologia AJAX (Asynchronous JavaScript and XML) permitiu a comunicação com o servidor sem necessitar de uma atualização completa da página. Com isso, foram desenvolvidas algumas técnicas para estabelecer a comunicação em tempo real com o servidor.
-
-&lt;/p&gt;
-&lt;p&gt;Uma das técnicas mais famosas é o &lt;em&gt;long-polling&lt;/em&gt;. Ela consiste basicamente de três passos:
-
-&lt;/p&gt;
+&lt;p&gt;Todas essas transformações implicam em grande quantidade de código que não se presta diretamente a solucionar os problemas de negócio os quais se propõe resolver o aplicativo.&lt;/p&gt;
+&lt;h4 id=&quot;comunicação-realtime---long-polling&quot;&gt;Comunicação Realtime - Long polling&lt;/h4&gt;
+&lt;p&gt;Muitos aplicativos têm por requisito a comunicação em tempo real entre múltiplos clientes. Até pouco tempo atrás, isso não era possível no ambiente web devido à precariedade dos browsers, e aplicativos tempo real eram tipicamente &lt;em&gt;desktop&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Recentemente, a tecnologia AJAX (Asynchronous JavaScript and XML) permitiu a comunicação com o servidor sem necessitar de uma atualização completa da página. Com isso, foram desenvolvidas algumas técnicas para estabelecer a comunicação em tempo real com o servidor.&lt;/p&gt;
+&lt;p&gt;Uma das técnicas mais famosas é o &lt;em&gt;long-polling&lt;/em&gt;. Ela consiste basicamente de três passos:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;O browser faz um request AJAX para um endpoint no servidor.&lt;/li&gt;
-&lt;li&gt;O servidor &lt;em&gt;segura&lt;/em&gt; esse request aberto enquanto nenhum evento significativo é gerado pela lógica de negócio&lt;/li&gt;
+&lt;li&gt;O servidor mantém esse request aberto enquanto nenhum evento significativo é gerado pela lógica de negócio&lt;/li&gt;
 &lt;li&gt;Quando um evento é gerado, o servidor responde para o browser, que reinicia o ciclo emitindo um novo request.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Essa técnica é utilizada com sucesso pelo Benvenuto, mas ela é sujeita a alguns problemas:
-
-&lt;/p&gt;
+&lt;p&gt;Essa técnica é utilizada com sucesso pelo Benvenuto, mas ela é sujeita a alguns problemas:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Se um request AJAX é interrompido, não existe nenhum outro jeito do servidor notificar o cliente de novos eventos. Assim, a implementação deve ser resistente a quedas de conexão e saber reestabelecer o pedido sempre que ocorrerem problemas.&lt;/li&gt;
 &lt;li&gt;Browsers mobile estão sujeitos a muitas interrupções que podem parar requests AJAX, como entrar em modo &lt;em&gt;sleep&lt;/em&gt;, recebimento de chamadas, etc.&lt;/li&gt;
-&lt;li&gt;O servidor deve saber lidar com as chamadas de forma eficiente para não trancar threads enquanto segura um request aberto.&lt;/li&gt;
+&lt;li&gt;O servidor deve saber lidar com as chamadas de forma eficiente para não manter threads ocupadas enquanto serve um request.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Assim, é necessário grande cuidado ao implementar uma solução de long-polling.
-
-&lt;/p&gt;
-&lt;h3&gt;Parte 2 - Escolha das Tecnologias e Benefícios Esperados&lt;/h3&gt;
-&lt;h4&gt;Node.js e Express 3.0&lt;/h4&gt;
-&lt;p&gt;Node.js é uma plataforma para execução de Javascript. Assim como Ruby e Python, Javascript é uma linguagem dinâmica e interpretada: ela necessita de um programa que interprete seus comandos para um nível mais baixo. No browser Google Chrome, a &lt;em&gt;engine&lt;/em&gt; responsável por interpretar Javascript se chama &lt;strong&gt;V8&lt;/strong&gt;. O Node.js utiliza a engine V8 e disponibiliza bibliotecas para transformar o Javascript numa linguagem viável para o server-side.
-
-&lt;/p&gt;
-&lt;p&gt;As vantagens de utilizar o Node.js são muitas, especialmente ao considerar o quesito performance:
-
-&lt;/p&gt;
+&lt;p&gt;Assim, é necessário grande cuidado ao implementar uma solução de long-polling.&lt;/p&gt;
+&lt;h3 id=&quot;parte-2---escolha-das-tecnologias-e-benefícios-esperados&quot;&gt;Parte 2 - Escolha das Tecnologias e Benefícios Esperados&lt;/h3&gt;
+&lt;h4 id=&quot;node.js-e-express-3.0&quot;&gt;Node.js e Express 3.0&lt;/h4&gt;
+&lt;p&gt;Node.js é uma plataforma para execução de Javascript. Assim como Ruby e Python, Javascript é uma linguagem dinâmica e interpretada: ela necessita de um programa que interprete seus comandos para um nível mais baixo. No browser Google Chrome, a &lt;em&gt;engine&lt;/em&gt; responsável por interpretar Javascript se chama &lt;strong&gt;V8&lt;/strong&gt;. O Node.js utiliza a engine V8 e disponibiliza bibliotecas para transformar o Javascript numa linguagem viável para o server-side.&lt;/p&gt;
+&lt;p&gt;As vantagens de utilizar o Node.js são muitas, especialmente ao considerar o quesito performance:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A engine V8 é &lt;a href=&quot;http://shootout.alioth.debian.org/u32/which-programs-are-fastest.php&quot;&gt;muito performática&lt;/a&gt;, o que por sua vez garante boa performance do ambiente Node.js&lt;/li&gt;
 &lt;li&gt;Node.js utiliza um loop de eventos que visa otimizar a performance de operações intensiva em I/O. Alguns benchmarks demonstram que ele é capaz de &lt;a href=&quot;http://zgadzaj.com/benchmarking-nodejs-basic-performance-tests-against-apache-php&quot;&gt;mais de 4000 requests por segundo&lt;/a&gt;, ou 5x mais do que um stack Apache/PHP.&lt;/li&gt;
-&lt;li&gt;Menor utilização de memória, comparado com Java e outros frameworks mais &quot;robustos&quot;.&lt;/li&gt;
+&lt;li&gt;Menor utilização de memória, comparado com Java e outros frameworks mais “robustos”.&lt;/li&gt;
 &lt;li&gt;Lida muito bem com múltiplos clientes concorrentes. Alguns benchmarks já conseguiram lidar com mais de &lt;a href=&quot;http://blog.caustik.com/2012/04/10/node-js-w250k-concurrent-connections/&quot;&gt;250 mil conexões concorrentes&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Mas performance não é o único motivo para utilizar o Node.js. Ao utilizar a mesma linguagem no client e no servidor, é possível reutilizar código entre esses dois ambientes e diminuir a impedância entre eles. Menos conversões significa um código menor e mais focado em resolver os problemas de negócio.
-
-&lt;/p&gt;
-&lt;p&gt;Uma outra notável qualidade do Node.js é sua comunidade e a organização de pacotes em torno do &lt;strong&gt;npm&lt;/strong&gt; (node package manager). Inspirado nas &lt;em&gt;gems&lt;/em&gt; do Ruby, o node já nasceu com o conceito de pacotes e a quantidade de bibliotecas open-source cresce em uma taxa frenética.
-
-&lt;/p&gt;
-&lt;p&gt;Um desses pacotes é o excelente &lt;strong&gt;Express&lt;/strong&gt;. Se trata de um framework para desenvolvimento de aplicativos web. Ele oferece um modelo simples para a criação rápida de aplicativos, solucionando muitos problemas comuns como autenticação, manipulação de cookies, etc. Atualmente é o framework web mais utilizado para Node.js.
-
-&lt;/p&gt;
-&lt;h4&gt;Socket.IO&lt;/h4&gt;
-&lt;p&gt;Socket.IO é uma biblioteca que oferece comunicação realtime entre um servidor Node.js e seus clientes. Para tanto, ela disponibiliza uma API de publish/subscribe muito simples, acessível de ambos os lados do aplicativo.
-
-&lt;/p&gt;
-&lt;p&gt;Uma vez conectado no servidor Node.js, um cliente pode se inscrever nos tópicos que lhe interessam e enviar mensagens em tópicos, assim como o servidor. Dessa forma, existe uma comunicação transparente entre as partes, independente de qualquer ciclo de request e response.
-
-&lt;/p&gt;
-&lt;p&gt;Como canal de comunicação, o Socket.IO irá preferir utilizar &lt;a href=&quot;http://en.wikipedia.org/wiki/WebSocket&quot;&gt;&lt;em&gt;WebSockets&lt;/em&gt;&lt;/a&gt; se possível, utilizando &lt;em&gt;fall-backs&lt;/em&gt; como Flash ou long-polling se necessário. Todos os cuidados são tomados, entretanto, para garantir o recebimento das mensagens pelos clientes e pelo servidor, sem que o usuário da biblioteca tenha que se preocupar com problemas como interrupção de conexão.
-
-&lt;/p&gt;
-&lt;p&gt;A utilização do Socket.IO, portanto, traz benefícios óbvios para o Benvenuto pois descarta a necessidade de uma implementação própria de long-polling, disponibilizando uma forma eficiente e segura de trocar mensagens entre o servidor e os clientes.
-
-&lt;/p&gt;
-&lt;h4&gt;Redis&lt;/h4&gt;
-&lt;p&gt;Redis é um banco de dados chave-valor em memória. Ele foca em atender os problemas com &lt;em&gt;datasets&lt;/em&gt; pequenos, que caibam completamente na memória principal. Em um banco de dados chave-valor, não existe a noção de uma tabela com campos pré-definidos. Em geral, armazena-se uma string (um valor) com um nome (uma chave). Para acessar esse valor, é preciso ter em mãos a chave.
-
-&lt;/p&gt;
-&lt;p&gt;Dado que a serialização JSON é uma forma muito comum e conveniente de transmitir objetos Javascript, bancos de dado chave-valor vêm sendo utilizados com grande sucesso pelos desenvolvedores do stack Node.js. Basta serializar um objeto e guardar o JSON com uma chave identificadora. Normalmente, utiliza-se o conceito de &quot;namespace&quot; para artificialmente agrupar chaves que se relacionam. Por exemplo, poderíamos guardar um usuario com a chave &quot;app:user:3&quot; onde 3 é o id do usuário.
-
-&lt;/p&gt;
-&lt;p&gt;O banco Redis beneficia o Benvenuto principalmente por simplificar a forma de armazenamento dos objetos, sem necessitar da criação de um &quot;esquema&quot; de banco de dados, e por apresentar um significativo ganho de performance em relação a bancos relacionais, que utilizam pesadamente o acesso à disco.
-
-&lt;/p&gt;
-&lt;h3&gt;Parte 3 - Estratégia de migração do server-side&lt;/h3&gt;
-&lt;h4&gt;Mimicando a API JSON no Node.js&lt;/h4&gt;
-&lt;p&gt;Escolhidas as tecnologias que desejamos utilizar para escrever a nova versão do Benvenuto, resta a pergunta: Por onde começar?
-
-&lt;/p&gt;
-&lt;p&gt;Ao tomar essa decisão, um ponto foi decisivo: a camada de apresentação deveria ser mantida basicamente imodificada - continuando a consumir JSON de uma API e apresentar a interface com a biblioteca KnockoutJS.
-
-&lt;/p&gt;
-&lt;p&gt;Assim, o primeiro protótipo do aplicativo Benvenuto em Node.js consistiu de uma API &lt;em&gt;mock&lt;/em&gt; que retornava apenas JSON estático. Para fazer isso, todas as chamadas que retornavam JSON no serviço antigo tiveram um &lt;em&gt;exemplar&lt;/em&gt; de JSON recortado e guardado em um arquivo, que era lido e entregue pelo novo servidor.
-
-&lt;/p&gt;
-&lt;p&gt;Feito isso, passava a ser necessário mimicar de fato o comportamento da API - permitindo, por exemplo, ocupação e liberação de lugares. Para tanto, uma variável em memória passou a guardar todo o JSON estático do mapa de mesas e a ser modificada pelas chamadas à API. O programa passou a apresentar o mesmo comportamento que o serviço antigo, em menos de 200 linhas de código.
-
-&lt;/p&gt;
-&lt;p&gt;Claro, nesse momento ainda não existe a persistência de objetos. A cada &quot;reset&quot; do aplicativo, o estado era perdido. Ainda assim, já é possível perceber que existe uma clara queda de complexidade no código do servidor.
-
-&lt;/p&gt;
-&lt;h3&gt;Parte 4 - Estratégia de migração da persistência&lt;/h3&gt;
-&lt;h4&gt;Estruturando os dados para um banco chave/valor&lt;/h4&gt;
-&lt;p&gt;Resolvida a camada da API JSON, é preciso estabelecer uma forma conveniente de modelar nossos objetos para uma persistência simples e eficiente utilizando o banco REDIS.
-
-&lt;/p&gt;
-&lt;p&gt;A estrutura original de objetos utilizava-se pesadamente de &lt;em&gt;foreign keys&lt;/em&gt; - típico de um banco de dados relacional. Entretanto, &lt;em&gt;foreign keys&lt;/em&gt; não são fáceis de utilizar em um banco chave-valor pois não existe suporte nenhum à essa lógica na camada do banco.
-
-&lt;/p&gt;
-&lt;p&gt;Por exemplo, a classe GenericTable, que representa uma mesa, era definida como:
-
-&lt;/p&gt;
+&lt;p&gt;Mas performance não é o único motivo para utilizar o Node.js. Ao utilizar a mesma linguagem no client e no servidor, é possível reutilizar código entre esses dois ambientes e diminuir a impedância entre eles. Menos conversões significa um código menor e mais focado em resolver os problemas de negócio.&lt;/p&gt;
+&lt;p&gt;Uma outra notável qualidade do Node.js é sua comunidade e a organização de pacotes em torno do &lt;strong&gt;npm&lt;/strong&gt; (node package manager). Inspirado nas &lt;em&gt;gems&lt;/em&gt; do Ruby, o node já nasceu com o conceito de pacotes e a quantidade de bibliotecas open-source cresce velozmente.&lt;/p&gt;
+&lt;p&gt;Um desses pacotes é o excelente &lt;strong&gt;Express&lt;/strong&gt;. Se trata de um framework para desenvolvimento de aplicativos web. Ele oferece um modelo simples para a criação rápida de aplicativos, solucionando muitos problemas comuns como autenticação, manipulação de cookies, etc. Atualmente é o framework web mais utilizado para Node.js.&lt;/p&gt;
+&lt;h4 id=&quot;socket.io&quot;&gt;Socket.IO&lt;/h4&gt;
+&lt;p&gt;Socket.IO é uma biblioteca que oferece comunicação realtime entre um servidor Node.js e seus clientes. Para tanto, ela disponibiliza uma API de publish/subscribe muito simples, acessível de ambos os lados do aplicativo.&lt;/p&gt;
+&lt;p&gt;Uma vez conectado no servidor Node.js, um cliente pode se inscrever nos tópicos que lhe interessam e enviar mensagens em tópicos, assim como o servidor. Dessa forma, existe uma comunicação transparente entre as partes, independente de qualquer ciclo de request e response.&lt;/p&gt;
+&lt;p&gt;Como canal de comunicação, o Socket.IO irá preferir utilizar &lt;a href=&quot;http://en.wikipedia.org/wiki/WebSocket&quot;&gt;&lt;em&gt;WebSockets&lt;/em&gt;&lt;/a&gt; se possível, utilizando &lt;em&gt;fallbacks&lt;/em&gt;&lt;sup&gt;&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fn3&quot; class=&quot;footnoteRef&quot; id=&quot;fnref3&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; como Flash ou long-polling se necessário. Todos os cuidados são tomados, entretanto, para garantir o recebimento das mensagens pelos clientes e pelo servidor, sem que o usuário da biblioteca tenha que se preocupar com problemas como interrupção de conexão.&lt;/p&gt;
+&lt;p&gt;A utilização do Socket.IO, portanto, traz benefícios óbvios para o Benvenuto pois descarta a necessidade de uma implementação própria de long-polling, disponibilizando uma forma eficiente e segura de trocar mensagens entre o servidor e os clientes.&lt;/p&gt;
+&lt;h4 id=&quot;redis&quot;&gt;Redis&lt;/h4&gt;
+&lt;p&gt;Redis é um banco de dados chave-valor em memória. Ele foca em atender os problemas com &lt;em&gt;datasets&lt;/em&gt; pequenos, que caibam completamente na memória principal. Em um banco de dados chave-valor, não existe a noção de uma tabela com campos pré-definidos. Em geral, armazena-se uma string (um valor) com um nome (uma chave). Para acessar esse valor, é preciso ter em mãos a chave.&lt;/p&gt;
+&lt;p&gt;Dado que a serialização JSON é uma forma muito comum e conveniente de transmitir objetos Javascript, bancos de dado chave-valor vêm sendo utilizados com grande sucesso pelos desenvolvedores do stack Node.js. Basta serializar um objeto e guardar o JSON com uma chave identificadora. Normalmente, utiliza-se o conceito de “namespace” para artificialmente agrupar chaves que se relacionam. Por exemplo, poderíamos guardar um usuario com a chave “app:user:3” onde 3 é o id do usuário.&lt;/p&gt;
+&lt;p&gt;O banco Redis beneficia o Benvenuto principalmente por simplificar a forma de armazenamento dos objetos, sem necessitar da criação de um “esquema” de banco de dados, e por apresentar um significativo ganho de performance em relação a bancos relacionais, que utilizam pesadamente o acesso à disco.&lt;/p&gt;
+&lt;h3 id=&quot;parte-3---estratégia-de-migração-do-server-side&quot;&gt;Parte 3 - Estratégia de migração do server-side&lt;/h3&gt;
+&lt;h4 id=&quot;mimicando-a-api-json-no-node.js&quot;&gt;Mimicando a API JSON no Node.js&lt;/h4&gt;
+&lt;p&gt;Escolhidas as tecnologias que desejamos utilizar para escrever a nova versão do Benvenuto, resta a pergunta: Por onde começar?&lt;/p&gt;
+&lt;p&gt;Ao tomar essa decisão, um ponto foi decisivo: a camada de apresentação deveria ser mantida sem modificações - continuando a consumir JSON de uma API e apresentar a interface com a biblioteca KnockoutJS.&lt;/p&gt;
+&lt;p&gt;Assim, o primeiro protótipo do aplicativo Benvenuto em Node.js consistiu de uma API &lt;em&gt;mock&lt;/em&gt; que retornava apenas JSON estático. Para fazer isso, todas as chamadas que retornavam JSON no serviço antigo tiveram um &lt;em&gt;exemplar&lt;/em&gt; de JSON recortado e guardado em um arquivo, que era lido e entregue pelo novo servidor.&lt;/p&gt;
+&lt;p&gt;Feito isso, passava a ser necessário imitar de fato o comportamento da API - permitindo, por exemplo, ocupação e liberação de lugares. Para tanto, uma variável em memória passou a guardar todo o JSON estático do mapa de mesas e a ser modificada pelas chamadas à API. O programa passou a apresentar o mesmo comportamento que o serviço antigo, em menos de 200 linhas de código.&lt;/p&gt;
+&lt;p&gt;Claro, nesse momento ainda não existe a persistência de objetos. A cada “reset” do aplicativo, o estado era perdido. Ainda assim, já é possível perceber que existe uma clara queda de complexidade no código do servidor.&lt;/p&gt;
+&lt;h3 id=&quot;parte-4---estratégia-de-migração-da-persistência&quot;&gt;Parte 4 - Estratégia de migração da persistência&lt;/h3&gt;
+&lt;h4 id=&quot;estruturando-os-dados-para-um-banco-chavevalor&quot;&gt;Estruturando os dados para um banco chave/valor&lt;/h4&gt;
+&lt;p&gt;Resolvida a camada da API JSON, é preciso estabelecer uma forma conveniente de modelar nossos objetos para uma persistência simples e eficiente utilizando o banco REDIS.&lt;/p&gt;
+&lt;p&gt;A estrutura original de objetos utilizava-se pesadamente de &lt;em&gt;foreign keys&lt;/em&gt; - típico de um banco de dados relacional. Entretanto, &lt;em&gt;foreign keys&lt;/em&gt; não são fáceis de utilizar em um banco chave-valor pois não existe suporte nenhum à essa lógica na camada do banco.&lt;/p&gt;
+&lt;p&gt;Por exemplo, a classe GenericTable, que representa uma mesa, era definida como:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name=&lt;span class=&quot;string&quot;&gt;&quot;table_type&quot;&lt;/span&gt;,discriminatorType=DiscriminatorType.CHAR)
-@DiscriminatorValue(&lt;span class=&quot;string&quot;&gt;&quot;N&quot;&lt;/span&gt;)
-&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; GenericTable &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; Model {
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; int maxNumberOfPlaces = &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;
-        &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; String label = &lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt;;
-        @OneToMany(cascade = CascadeType.ALL, mappedBy = &lt;span class=&quot;string&quot;&gt;&quot;table&quot;&lt;/span&gt;)
-        &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;List&lt;/span&gt;&lt;Place&gt; places = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; ArrayList&lt;Place&gt;();
+@DiscriminatorColumn(name=&quot;table_type&quot;,discriminatorType=DiscriminatorType.CHAR)
+@DiscriminatorValue(&quot;N&quot;)
+public class GenericTable extends Model {
+    public int maxNumberOfPlaces = 1;
+        public String label = &quot;&quot;;
+        @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;table&quot;)
+        public List&lt;Place&gt; places = new ArrayList&lt;Place&gt;();
     @Embedded
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; Point position;
+    public Point position;
     @ManyToOne
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; Layout layout;
+    public Layout layout;
 (...)
 }&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;br/&gt;
-E a classe Place, que representa um &quot;lugar&quot; à mesa:
-
-&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt; E a classe Place, que representa um “lugar” à mesa:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name=&lt;span class=&quot;string&quot;&gt;&quot;place_type&quot;&lt;/span&gt;,discriminatorType=DiscriminatorType.CHAR)
-@DiscriminatorValue(&lt;span class=&quot;string&quot;&gt;&quot;N&quot;&lt;/span&gt;)
-&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; Place &lt;span class=&quot;keyword&quot;&gt;extends&lt;/span&gt; Model {
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; String label = &lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt;;
+@DiscriminatorColumn(name=&quot;place_type&quot;,discriminatorType=DiscriminatorType.CHAR)
+@DiscriminatorValue(&quot;N&quot;)
+public class Place extends Model {
+    public String label = &quot;&quot;;
     @Embedded
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; Point position;
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; int numberOfOccupants;
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; Double rotation = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;D;
+    public Point position;
+    public int numberOfOccupants;
+    public Double rotation = 0D;
     @ManyToOne
-    &lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; GenericTable table;
+    public GenericTable table;
 (...)
 }&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;br/&gt;
-O JSON produzido pela API ao pedir todas as mesas livres resultante:
-
-&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt; O JSON produzido pela API ao pedir todas as mesas livres resultante:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;{
-    gridSizePixels : &lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;,
-    name : &lt;span class=&quot;string&quot;&gt;&quot;Couveflor-PUC-1&quot;&lt;/span&gt;,
+    gridSizePixels : 10,
+    name : &quot;Couveflor-PUC-1&quot;,
     tables : [ {
-        &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; : &lt;span class=&quot;string&quot;&gt;&quot;models.RoundTable&quot;&lt;/span&gt;,
-        id : &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,
-        label : &lt;span class=&quot;string&quot;&gt;&quot;01&quot;&lt;/span&gt;,
+        class : &quot;models.RoundTable&quot;,
+        id : 2,
+        label : &quot;01&quot;,
         places : [ {
-            id : &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,
-            label : &lt;span class=&quot;string&quot;&gt;&quot;01A&quot;&lt;/span&gt;,
-            numberOfOccupants : &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,
-            occupied : &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-            rotation : &lt;span class=&quot;number&quot;&gt;0.071525864538728&lt;/span&gt;,
-            x : -&lt;span class=&quot;number&quot;&gt;52&lt;/span&gt;,
-            y : -&lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;
+            id : 3,
+            label : &quot;01A&quot;,
+            numberOfOccupants : 1,
+            occupied : false,
+            rotation : 0.071525864538728,
+            x : -52,
+            y : -19
         }, {
-            id : &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,
-            label : &lt;span class=&quot;string&quot;&gt;&quot;01B&quot;&lt;/span&gt;,
-            numberOfOccupants : &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,
-            occupied : &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-            rotation : &lt;span class=&quot;number&quot;&gt;45.2975697722287&lt;/span&gt;,
-            x : -&lt;span class=&quot;number&quot;&gt;23&lt;/span&gt;,
-            y : -&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;
+            id : 4,
+            label : &quot;01B&quot;,
+            numberOfOccupants : 1,
+            occupied : false,
+            rotation : 45.2975697722287,
+            x : -23,
+            y : -50
         }, (...) ],
-        x : &lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;,
-        y : &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;
+        x : 9,
+        y : 7
     }, {
-        &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; : &lt;span class=&quot;string&quot;&gt;&quot;models.RoundTable&quot;&lt;/span&gt;,
-        id : &lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;,
-        label : &lt;span class=&quot;string&quot;&gt;&quot;09&quot;&lt;/span&gt;,
+        class : &quot;models.RoundTable&quot;,
+        id : 11,
+        label : &quot;09&quot;,
         places : [ {
-            id : &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;,
-            label : &lt;span class=&quot;string&quot;&gt;&quot;09A&quot;&lt;/span&gt;,
-            numberOfOccupants : &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,
-            occupied : &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-            rotation : &lt;span class=&quot;number&quot;&gt;0.071525864538728&lt;/span&gt;,
-            x : -&lt;span class=&quot;number&quot;&gt;52&lt;/span&gt;,
-            y : -&lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;
+            id : 12,
+            label : &quot;09A&quot;,
+            numberOfOccupants : 1,
+            occupied : false,
+            rotation : 0.071525864538728,
+            x : -52,
+            y : -19
         }, {
-            id : &lt;span class=&quot;number&quot;&gt;13&lt;/span&gt;,
-            label : &lt;span class=&quot;string&quot;&gt;&quot;09B&quot;&lt;/span&gt;,
-            numberOfOccupants : &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,
-            occupied : &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-            rotation : &lt;span class=&quot;number&quot;&gt;45.2975697722287&lt;/span&gt;,
-            x : -&lt;span class=&quot;number&quot;&gt;23&lt;/span&gt;,
-            y : -&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;
+            id : 13,
+            label : &quot;09B&quot;,
+            numberOfOccupants : 1,
+            occupied : false,
+            rotation : 45.2975697722287,
+            x : -23,
+            y : -50
         }, (...) ],
-        x : &lt;span class=&quot;number&quot;&gt;34&lt;/span&gt;,
-        y : &lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;
+        x : 34,
+        y : 7
     } ]
 }&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;br/&gt;
-Como se pode ver, a estrutura principal consiste em um array de &lt;em&gt;tables&lt;/em&gt;, cada uma com seu conjunto de &lt;em&gt;places&lt;/em&gt;. Isso representa um grande inconveniente para persistir esses objetos no REDIS, onde não há como facilmente como fazer referência a &quot;objetos filhos&quot;.
+&lt;p&gt;&lt;br/&gt; Como se pode ver, a estrutura principal consiste em um array de &lt;em&gt;tables&lt;/em&gt;, cada uma com seu conjunto de &lt;em&gt;places&lt;/em&gt;. Isso representa um grande inconveniente para persistir esses objetos no REDIS, onde não há como facilmente como fazer referência a “objetos filhos”.&lt;/p&gt;
+&lt;p&gt;A solução proposta foi inverter a estrutura - tornando &lt;em&gt;Place&lt;/em&gt; o modelo principal. Ele é, afinal, o modelo que serve como referência para as ações de &lt;em&gt;ocupar&lt;/em&gt; e &lt;em&gt;liberar&lt;/em&gt;, por exemplo.&lt;/p&gt;
+&lt;p&gt;Finalmente, foi necessário &lt;em&gt;desnormalizar&lt;/em&gt;&lt;sup&gt;&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fn4&quot; class=&quot;footnoteRef&quot; id=&quot;fnref4&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; os atributos de &lt;em&gt;Table&lt;/em&gt; dentro de cada &lt;em&gt;Place&lt;/em&gt;. Isso incorre em um pequeno aumento do tamanho total necessário para representar o mapa de mesas, mas resolve o problema de múltiplas entidades. Um pequeno utilitário foi escrito transformar o formato antigo para o formato novo:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(function() {
+  var flatPlaces, places, placesC, _u;
 
-&lt;/p&gt;
-&lt;p&gt;A solução proposta foi inverter a estrutura - tornando &lt;em&gt;Place&lt;/em&gt; o modelo principal. Ele é, afinal, o modelo que serve como referência para as ações de &lt;em&gt;ocupar&lt;/em&gt; e &lt;em&gt;liberar&lt;/em&gt;, por exemplo.
+  placesC = require(&#39;./places.js&#39;);
 
-&lt;/p&gt;
-&lt;p&gt;Finalmente, foi necessário &lt;em&gt;desnormalizar&lt;/em&gt; os atributos de &lt;em&gt;Table&lt;/em&gt; dentro de cada &lt;em&gt;Place&lt;/em&gt;. Isso incorre em um pequeno aumento do tamanho total necessário para representar o mapa de mesas, mas resolve o problema de múltiplas entidades. Um pequeno utilitário foi escrito transformar o formato antigo para o formato novo:
-
-&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;() {
-  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; flatPlaces, places, placesC, _u;
-
-  placesC = &lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;'./places.js'&lt;/span&gt;);
-
-  _u = &lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;'underscore'&lt;/span&gt;);
+  _u = require(&#39;underscore&#39;);
 
   places = placesC.collection;
 
-  flatPlaces = &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;() {
-    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; _u.chain(places.tables).map(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(table) {
-      &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; place, _i, _len, _ref;
+  flatPlaces = function() {
+    return _u.chain(places.tables).map(function(table) {
+      var place, _i, _len, _ref;
       _ref = table.places;
-      &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (_i = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, _len = _ref.length; _i &lt; _len; _i++) {
+      for (_i = 0, _len = _ref.length; _i &lt; _len; _i++) {
         place = _ref[_i];
         place.tableId = table.id;
         place.tableX = table.x;
         place.tableY = table.y;
-        place.tableClass = table._&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt;;
+        place.tableClass = table._class;
       }
-      &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; table.places;
+      return table.places;
     }).flatten().value();
   };
 
   places.places = flatPlaces();
 
-  places.tables = void &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;
+  places.tables = void 0;
 
   console.log(places);
 
-}).call(&lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;);&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;br/&gt;
-Agora, o resultado para a chamada do mapa de mesas produz um resultado muito mais simples:
-
-&lt;/p&gt;
+}).call(this);&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;br/&gt; Agora, o resultado para a chamada do mapa de mesas produz um resultado muito mais simples:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;[
   {
-    &lt;span class=&quot;string&quot;&gt;&quot;id&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;109&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;label&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;37&quot;&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;numberOfOccupants&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;occupied&quot;&lt;/span&gt;: &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;rotation&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;x&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;y&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableId&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;108&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableX&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;33&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableY&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;91&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableClass&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;models.GenericTable&quot;&lt;/span&gt;
+    &quot;id&quot;: 109,
+    &quot;label&quot;: &quot;37&quot;,
+    &quot;numberOfOccupants&quot;: 2,
+    &quot;occupied&quot;: false,
+    &quot;rotation&quot;: 0,
+    &quot;x&quot;: 0,
+    &quot;y&quot;: 0,
+    &quot;tableId&quot;: 108,
+    &quot;tableX&quot;: 33,
+    &quot;tableY&quot;: 91,
+    &quot;tableClass&quot;: &quot;models.GenericTable&quot;
   },
   {
-    &lt;span class=&quot;string&quot;&gt;&quot;id&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;145&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;label&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;53&quot;&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;numberOfOccupants&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;occupied&quot;&lt;/span&gt;: &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;rotation&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;x&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;y&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableId&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;144&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableX&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;49&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableY&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;130&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableClass&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;models.GenericTable&quot;&lt;/span&gt;
+    &quot;id&quot;: 145,
+    &quot;label&quot;: &quot;53&quot;,
+    &quot;numberOfOccupants&quot;: 2,
+    &quot;occupied&quot;: false,
+    &quot;rotation&quot;: 0,
+    &quot;x&quot;: 0,
+    &quot;y&quot;: 0,
+    &quot;tableId&quot;: 144,
+    &quot;tableX&quot;: 49,
+    &quot;tableY&quot;: 130,
+    &quot;tableClass&quot;: &quot;models.GenericTable&quot;
   },
   {
-    &lt;span class=&quot;string&quot;&gt;&quot;id&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;147&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;label&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;55&quot;&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;numberOfOccupants&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;occupied&quot;&lt;/span&gt;: &lt;span class=&quot;keyword&quot;&gt;false&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;rotation&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;90&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;x&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;y&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableId&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;146&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableX&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;56&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableY&quot;&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;126&lt;/span&gt;,
-    &lt;span class=&quot;string&quot;&gt;&quot;tableClass&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;models.GenericTable&quot;&lt;/span&gt;
+    &quot;id&quot;: 147,
+    &quot;label&quot;: &quot;55&quot;,
+    &quot;numberOfOccupants&quot;: 2,
+    &quot;occupied&quot;: false,
+    &quot;rotation&quot;: 90,
+    &quot;x&quot;: 0,
+    &quot;y&quot;: 0,
+    &quot;tableId&quot;: 146,
+    &quot;tableX&quot;: 56,
+    &quot;tableY&quot;: 126,
+    &quot;tableClass&quot;: &quot;models.GenericTable&quot;
   }, (...)
 ]&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;br/&gt;
-Então, com uma estrutura &quot;planificada&quot;, persistir os objetos é simples. O esquema de persistência é o seguinte:
-
-&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt; Então, com uma estrutura “planificada”, persistir os objetos é simples. O esquema de persistência é o seguinte:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Uma &lt;em&gt;key&lt;/em&gt; de place é formada por &quot;layout&quot;, seguido do id do layout, seguido de &quot;place&quot;, seguido do id do place. Por exemplo: &quot;layout:1:place:109&quot;.&lt;/li&gt;
-&lt;li&gt;Um &lt;strong&gt;set&lt;/strong&gt; é utilizado para guardar todas as &lt;em&gt;keys&lt;/em&gt; de &lt;em&gt;Places&lt;/em&gt;. Ou seja, esse set contém, por exemplo:
-  [layout:1:place:109, layout:1:place:110, layout:1:place:111, (...)]&lt;/li&gt;
-&lt;li&gt;Existe um método genérico, &lt;code&gt;getMultiplePlaces( idsArray )&lt;/code&gt; para recuperar &lt;strong&gt;n&lt;/strong&gt; lugares do banco, dado seus &lt;em&gt;id&apos;s&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;Existe um método que recupera &lt;strong&gt;todos&lt;/strong&gt; os lugares do banco, utilizando o método &lt;code&gt;getMultiplePlaces&lt;/code&gt; e o &lt;strong&gt;set&lt;/strong&gt; que contém todos os &lt;em&gt;id&apos;s&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Uma &lt;em&gt;key&lt;/em&gt; de place é formada por “layout”, seguido do id do layout, seguido de “place”, seguido do id do place. Por exemplo: “layout:1:place:109”.&lt;/li&gt;
+&lt;li&gt;Um &lt;strong&gt;set&lt;/strong&gt; é utilizado para guardar todas as &lt;em&gt;keys&lt;/em&gt; de &lt;em&gt;Places&lt;/em&gt;. Ou seja, esse set contém, por exemplo: [layout:1:place:109, layout:1:place:110, layout:1:place:111, (…)]&lt;/li&gt;
+&lt;li&gt;Existe um método genérico, &lt;code&gt;getMultiplePlaces( idsArray )&lt;/code&gt; para recuperar &lt;strong&gt;n&lt;/strong&gt; lugares do banco, dado seus &lt;em&gt;id’s&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Existe um método que recupera &lt;strong&gt;todos&lt;/strong&gt; os lugares do banco, utilizando o método &lt;code&gt;getMultiplePlaces&lt;/code&gt; e o &lt;strong&gt;set&lt;/strong&gt; que contém todos os &lt;em&gt;id’s&lt;/em&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Agora, recuperar e persistir um ou múltiplos &lt;em&gt;Places&lt;/em&gt; passa a ser trivial, graças a adequação do modelo de dados, e a persistência está implementada.
-
+&lt;p&gt;Agora, recuperar e persistir um ou múltiplos &lt;em&gt;Places&lt;/em&gt; passa a ser trivial, graças a adequação do modelo de dados, e a persistência está implementada.&lt;/p&gt;
+&lt;h3 id=&quot;parte-5---medição-de-resultados&quot;&gt;Parte 5 - Medição de resultados&lt;/h3&gt;
+&lt;h4 id=&quot;loc---número-de-linhas-de-código&quot;&gt;LOC - Número de linhas de código&lt;/h4&gt;
+&lt;p&gt;Um dos grandes benefícios de se utilizar linguagens dinâmicas é a grande redução do número de linhas de código em relação a linguagens mais verborrágicas como Java.&lt;/p&gt;
+&lt;p&gt;Utilizando o programa &lt;a href=&quot;http://cloc.sourceforge.net/&quot;&gt;cloc&lt;/a&gt;, podemos observar alguns números interessantes.&lt;/p&gt;
+&lt;p&gt;Language files blank comment code&lt;/p&gt;
+&lt;p&gt;Java 24 237 32 &lt;strong&gt;1200&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Com as novas linguagens e as refatorações feitas, chegamos a um resultado incrível em nosso arquivo principal, &lt;code&gt;app.coffee&lt;/code&gt;, que contém toda a lógica de API e Persistência:&lt;/p&gt;
+&lt;p&gt;Language files blank comment code&lt;/p&gt;
+&lt;p&gt;CoffeeScript 1 30 50 &lt;strong&gt;217&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Ou seja, uma redução de 5 vezes. Se, como diz Jeff Atwood, &lt;a href=&quot;http://www.codinghorror.com/blog/2007/12/size-is-the-enemy.html&quot;&gt;tamanho é o inimigo&lt;/a&gt;, certamente houve progresso.&lt;/p&gt;
+&lt;p&gt;Mas e quanto à performance? É possível detectar algum ganho ao utilizar o Node.js e REDIS versus Java e PostgreSQL?&lt;/p&gt;
+&lt;h4 id=&quot;performance---stress-test-requestssegundo&quot;&gt;Performance - stress test requests/segundo&lt;/h4&gt;
+&lt;p&gt;Utilizando o utilitário &lt;a href=&quot;http://openwebload.sourceforge.net/&quot;&gt;openload&lt;/a&gt;, foram realizados testes de performance sobre as duas versões do aplicativo. Para o teste, realizamos chamadas concorrentes a uma URL que devolve todas as mesas do banco de dados, serializadas em JSON. Conforme esperado, a combinação de Node.js com Redis apresentou uma performance esmagadoramente maior que Java e PostgreSQL. No geral, foi observado uma diminuição de 20 vezes no tempo de resposta, e consequentemente, um aumento de 20 vezes no número de requests servidos.&lt;/p&gt;
+&lt;br/&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+Tempo de Resposta
 &lt;/p&gt;
-&lt;h3&gt;Parte 5 - Medição de resultados&lt;/h3&gt;
-&lt;h4&gt;LOC - Número de linhas de código&lt;/h4&gt;
-&lt;p&gt;Um dos grandes benefícios de se utilizar linguagens dinâmicas é a grande redução do número de linhas de código em relação a linguagens mais verborrágicas como Java.
-
+&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;http://moongate.se/articles/benvenuto-node/bn1.png&quot; alt=&quot;Tempo de Resposta&quot; /&gt;&lt;p class=&quot;caption&quot;&gt;Tempo de Resposta&lt;/p&gt;
+&lt;/div&gt;
+&lt;br/&gt;
+&lt;p style=&quot;text-align:center&quot;&gt;
+Número de Requests Servidos
 &lt;/p&gt;
-&lt;p&gt;Utilizando o programa &lt;a href=&quot;http://cloc.sourceforge.net/&quot;&gt;cloc&lt;/a&gt;, podemos observar alguns números interessantes.
-
-&lt;/p&gt;
-&lt;p&gt;Language    files    blank    comment    code
-
-&lt;/p&gt;
-&lt;p&gt;Java        24    237    32        &lt;strong&gt;1200&lt;/strong&gt;
-
-&lt;/p&gt;
-&lt;p&gt;Com as novas linguagens e as refatorações feitas, chegamos a um resultado incrível em nosso arquivo principal, &lt;code&gt;app.coffee&lt;/code&gt;, que contém toda a lógica de API e Persistência:
-
-&lt;/p&gt;
-&lt;p&gt;Language    files    blank    comment    code
-
-&lt;/p&gt;
-&lt;p&gt;CoffeeScript    1    30    50        &lt;strong&gt;217&lt;/strong&gt;
-
-&lt;/p&gt;
-&lt;p&gt;Ou seja, uma redução de 5 vezes. Se, como diz Jeff Atwood, &lt;a href=&quot;http://www.codinghorror.com/blog/2007/12/size-is-the-enemy.html&quot;&gt;tamanho é o inimigo&lt;/a&gt;, certamente houve progresso.
-
-&lt;/p&gt;
-&lt;p&gt;Mas e quanto à performance? É possível detectar algum ganho ao utilizar o Node.js e REDIS versus Java e PostgreSQL?
-
-&lt;/p&gt;
-&lt;h4&gt;Performance - stress test requests/segundo&lt;/h4&gt;
-&lt;p&gt;Utilizando o utilitário &lt;a href=&quot;http://openwebload.sourceforge.net/&quot;&gt;openload&lt;/a&gt;, foram realizados testes de performance sobre as duas versões do aplicativo.
-Para o teste, realizamos chamadas concorrentes a uma URL que devolve todas as mesas do banco de dados, serializadas em JSON.
-Conforme esperado, a combinação de Node.js com Redis apresentou uma performance esmagadoramente maior que Java e PostgreSQL.
-No geral, foi observado uma diminuição de 20 vezes no tempo de resposta, e consequentemente, um aumento de 20 vezes no número de requests servidos.
-
-&lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;p style=&quot;text-align:center&quot;&gt;Tempo de Resposta&lt;/p&gt;
-&lt;img src=&quot;bn1.png&quot; alt=&quot;Tempo de Resposta&quot;&gt;
-
-&lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-&lt;/p&gt;
-&lt;p&gt;&lt;p style=&quot;text-align:center&quot;&gt;Número de Requests Servidos&lt;/p&gt;
-&lt;img src=&quot;bn2.png&quot; alt=&quot;Requests Servidos&quot;&gt;
-
-&lt;/p&gt;
-&lt;p&gt;&lt;br/&gt;
-
-&lt;/p&gt;
-&lt;h3&gt;Parte 6 - Conclusão&lt;/h3&gt;
-&lt;h4&gt;Principais benefícios da migração&lt;/h4&gt;
-&lt;p&gt;A migração do Benvenuto culminou em muitas lições que, em última análise, podem ser traduzidas em uma noção simples: utilize a ferramenta certa para cada problema.
-
-&lt;/p&gt;
-&lt;p&gt;Claramente, Node.js e suas bibliotecas nasceram para solucionar os problemas de desenvolvimento web, e, por isso, oferecem soluções muito mais naturais.
-Na persistência, é evidente que, dada a possibilidade, bancos chave-valor em memória são escolhas muito mais sensíveis para uma melhor performance do aplicativo.
-
-&lt;/p&gt;
-&lt;p&gt;Acredito que o stack Java ainda vá sobreviver um longo tempo pois ele tem, de fato, muitos méritos.
-Entretanto, empresas novas e pequenas devem focar seus esforços nas novas tecnologias, que oferecem soluções muito mais efetivas para os problemas reais da web hoje.
-A escolha entre novas e velhas tecnologias não é uma opção. Utilizar a linguagem e o ambiente que vai solucionar seu problema de forma mais simples é imperativo.
-
-
-&lt;/p&gt;
+&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;http://moongate.se/articles/benvenuto-node/bn2.png&quot; alt=&quot;Requests Servidos&quot; /&gt;&lt;p class=&quot;caption&quot;&gt;Requests Servidos&lt;/p&gt;
+&lt;/div&gt;
+&lt;br/&gt;
+&lt;h3 id=&quot;parte-6---conclusão&quot;&gt;Parte 6 - Conclusão&lt;/h3&gt;
+&lt;h4 id=&quot;principais-benefícios-da-migração&quot;&gt;Principais benefícios da migração&lt;/h4&gt;
+&lt;p&gt;A migração do Benvenuto culminou em muitas lições que, em última análise, podem ser traduzidas em uma noção simples: utilize a ferramenta certa para cada problema.&lt;/p&gt;
+&lt;p&gt;Claramente, Node.js e suas bibliotecas nasceram para solucionar os problemas de desenvolvimento web, e, por isso, oferecem soluções muito mais naturais. Na persistência, é evidente que, dada a possibilidade, bancos chave-valor em memória são escolhas muito mais sensíveis para uma melhor performance do aplicativo.&lt;/p&gt;
+&lt;p&gt;Acredito que o stack Java ainda vá sobreviver um longo tempo pois ele tem, de fato, muitos méritos como performance, estabilidade e um enorme ecossistema de bibliotecas. Entretanto, empresas novas e pequenas devem focar seus esforços nas novas tecnologias, que oferecem soluções muito mais efetivas para os problemas reais da web hoje. A escolha entre novas e velhas tecnologias não é uma opção. Utilizar a linguagem e o ambiente que vai solucionar seu problema de forma mais simples é imperativo.&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&quot;fn1&quot;&gt;&lt;p&gt;A technology stack comprises the layers of components or services that are used to provide a software solution or application.&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fnref1&quot;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn2&quot;&gt;&lt;p&gt;No ambiente Java de 2011, JBoss Seam e Spring MVC seriam os frameworks já considerados “tradicionais”, enquanto o Play Framework era relativamente novo e quebrava muitos paradigmas.&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fnref2&quot;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn3&quot;&gt;&lt;p&gt;An alternative plan that may be used in an emergency. Nesse contexto, uma tecnologia menos elegante ou menos performática mas que cumpre o mesmo papel.&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fnref3&quot;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&quot;fn4&quot;&gt;&lt;p&gt;Denormalization is the process of attempting to optimize the read performance of a database by adding redundant data or by grouping data.&lt;a href=&quot;http://moongate.se/articles/benvenuto-node/#fnref4&quot;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
 </description>
     </item>
   </channel>

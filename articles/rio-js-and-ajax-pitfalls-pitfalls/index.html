@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Rio.JS and AJAX pitfalls pitfalls -Moongate
+    <title>&quot;Rio.JS and AJAX pitfalls pitfalls&quot; -Moongate
     </title>
     <link rel="alternate" href="http://moongate.se/feed.xml" type="application/rss+xml">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Junge" type="text/css">
@@ -17,127 +17,86 @@
       </div>
     </header>
     <div id="content">
-      <h2>Rio.JS and AJAX pitfalls pitfalls</h2>
+      <h2>&quot;Rio.JS and AJAX pitfalls pitfalls&quot;</h2>
       <p>by&nbsp<span class="author"><a href="mailto:gadr90@gmail.com">Guilherme Rodrigues</a></span>
       </p>
       <article class="post">
-        <section class="content"><p>This saturday, I&apos;ve been to the <a href="http://www.riojs.org/">Rio.JS</a> conference, a Rio de Janeiro-based Javascript developer event. I would like to congratulate the organizers for the effort, as I am sure that pulling such an event is no easy feat, and the formation of a local community is a noble intent. 
-
-</p>
-<p>One of the presenters, <a href="http://hugolnx.com/">Hugo Roque</a> asked for feedback on his <a href="http://www.slideshare.net/hugolnx/apresentacao-17070731">lecture</a>. Here, I&apos;ll try and offer some opinions on his proposed solutions which I hope will be helpful.
-
-</p>
-<p><span class="more"></span>
-
-</p>
-<p>Let&apos;s start at the beginning.  
-
-</p>
-<h3>If you suspect your public knows the basics of your subject, be quick presenting it.</h3>
-<p>At a javascript developer conference, I feel there is no need to explain the uses or benefits of AJAX. This technology is sufficiently <a href="http://en.wikipedia.org/wiki/Ajax_(programming)#History">old and commonplace</a> that the time would be better used with more advanced discussion.  
-
-</p>
-<h3>Save a reference to your jqXHR object</h3>
-<p>One of the common pitfalls of asynchronous communication is the lack of user feedback, <em>e.g.</em>, no <em>loading</em> hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:
-
-</p>
-<pre><code>$(<span class="string">"a"</span>).one(<span class="string">"click"</span>, <span class="keyword">function</span> (event) { 
-    $.get(<span class="string">"http://site.com"</span>, <span class="keyword">function</span> (html) {
-        <span class="comment">//do something</span>
+        <section class="content"><p>This saturday, I’ve been to the <a href="http://www.riojs.org/">Rio.JS</a> conference, a Rio de Janeiro-based Javascript developer event. I would like to congratulate the organizers for the effort, as I am sure that pulling such an event is no easy feat, and the formation of a local community is a noble intent.</p>
+<p>One of the presenters, <a href="http://hugolnx.com/">Hugo Roque</a> asked for feedback on his <a href="http://www.slideshare.net/hugolnx/apresentacao-17070731">lecture</a>. Here, I’ll try and offer some opinions on his proposed solutions which I hope will be helpful.</p>
+<span class="more"></span>
+<p>Let’s start at the beginning.</p>
+<h3 id="if-you-suspect-your-public-knows-the-basics-of-your-subject-be-quick-presenting-it.">If you suspect your public knows the basics of your subject, be quick presenting it.</h3>
+<p>At a javascript developer conference, I feel there is no need to explain the uses or benefits of AJAX. This technology is sufficiently <a href="http://en.wikipedia.org/wiki/Ajax_(programming)#History">old and commonplace</a> that the time would be better used with more advanced discussion.</p>
+<h3 id="save-a-reference-to-your-jqxhr-object">Save a reference to your jqXHR object</h3>
+<p>One of the common pitfalls of asynchronous communication is the lack of user feedback, <em>e.g.</em>, no <em>loading</em> hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:</p>
+<pre><code>$(&quot;a&quot;).one(&quot;click&quot;, function (event) { 
+    $.get(&quot;http://site.com&quot;, function (html) {
+        //do something
     });
     event.preventDefault();
 });</code></pre>
-<p>According to the jQuery documentation, with the <code>one</code> method,
-
-</p>
-<pre><code>"the handler is unbound after its first invocation."</code></pre>
-<p>This isn&apos;t very useful if your button is ever going to be clicked again. A nicer way to achieve the same effect is by saving a reference to the <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR</a> object which is returned by any ajax call, and reacting to it&apos;s existence:
-
-</p>
-<pre><code><span class="keyword">var</span> myRequestToken = undefined;
-$(<span class="string">'#my-button'</span>).click(<span class="keyword">function</span> (e) {
-    <span class="keyword">if</span> (myRequestToken) {
-        <span class="comment">// There is a request going on - ignore this click.</span>
-        <span class="keyword">return</span> <span class="keyword">false</span>;
+<p>According to the jQuery documentation, with the <code>one</code> method,</p>
+<pre><code>&quot;the handler is unbound after its first invocation.&quot;</code></pre>
+<p>This isn’t very useful if your button is ever going to be clicked again. A nicer way to achieve the same effect is by saving a reference to the <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR</a> object which is returned by any ajax call, and reacting to it’s existence:</p>
+<pre><code>var myRequestToken = undefined;
+$(&#39;#my-button&#39;).click(function (e) {
+    if (myRequestToken) {
+        // There is a request going on - ignore this click.
+        return false;
     }
-    <span class="comment">// Save a reference to the jqXHR. It is also a promise! (more on that soon)</span>
-    myRequestToken = $.get(<span class="string">'/promises/are/awesome/'</span>);
+    // Save a reference to the jqXHR. It is also a promise! (more on that soon)
+    myRequestToken = $.get(&#39;/promises/are/awesome/&#39;);
 
-    <span class="comment">// After the request is done and returns the data successfuly, run this function.</span>
-    myRequestToken.done(<span class="keyword">function</span> (data) { 
-        <span class="comment">// Do something</span>
+    // After the request is done and returns the data successfuly, run this function.
+    myRequestToken.done(function (data) { 
+        // Do something
     });
 
-    <span class="comment">// The request is complete - either with success or failure. </span>
-    <span class="comment">// Anyway, clean the reference and enable a new click.        </span>
-    myRequestToken.always(<span class="keyword">function</span> (data) {
+    // The request is complete - either with success or failure. 
+    // Anyway, clean the reference and enable a new click.        
+    myRequestToken.always(function (data) {
         myRequestToken = undefined;
     });    
 });</code></pre>
-<p>In this fashion, we have enabled the button to be clicked again after any communication is done. 
-This, however, doesn&apos;t solve the UX problem. Which leads us to...
-
-
-</p>
-<h3>Be economic with your DOM manipulation</h3>
-<p>Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of <a href="http://addyosmani.github.com/todomvc/">MVC frameworks</a>, <a href="http://garann.github.com/template-chooser/">templating engines</a> and whatnot.
-
-</p>
-<p>One of the classic misuses of jQuery is adding an arbitrary <code>img</code> tag after an event:
-
-</p>
-<pre><code>$(<span class="string">"a"</span>).one(<span class="string">"click"</span>, <span class="keyword">function</span> (event) {
-    <span class="keyword">var</span> img = $(<span class="string">"&lt;img src='images/loading.gif'>"</span>);
+<p>In this fashion, we have enabled the button to be clicked again after any communication is done. This, however, doesn’t solve the UX problem. Which leads us to…</p>
+<h3 id="be-economic-with-your-dom-manipulation">Be economic with your DOM manipulation</h3>
+<p>Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of <a href="http://addyosmani.github.com/todomvc/">MVC frameworks</a>, <a href="http://garann.github.com/template-chooser/">templating engines</a> and whatnot.</p>
+<p>One of the classic misuses of jQuery is adding an arbitrary <code>img</code> tag after an event:</p>
+<pre><code>$(&quot;a&quot;).one(&quot;click&quot;, function (event) {
+    var img = $(&quot;&lt;img src=&#39;images/loading.gif&#39;&gt;&quot;);
     img.appendTo(document.body);
-    $.get(<span class="string">"http://site.com"</span>, <span class="keyword">function</span> () {
-        <span class="comment">// faz alguma coisa</span>
+    $.get(&quot;http://site.com&quot;, function () {
+        // faz alguma coisa
         img.remove();
     });
 });</code></pre>
-<p>This has the added disadvantage of starting to load the image only after the node is appended. That means a user on a slow connection will continue to receive no feedback on your ajax button, because the loading image will not appear until it itself is loaded. 
-
-</p>
-<p>The solution can be, in fact, much simpler: 
-
-</p>
-<pre><code><span class="comment">// CSS</span>
+<p>This has the added disadvantage of starting to load the image only after the node is appended. That means a user on a slow connection will continue to receive no feedback on your ajax button, because the loading image will not appear until it itself is loaded.</p>
+<p>The solution can be, in fact, much simpler:</p>
+<pre><code>// CSS
 .hide { display: none; }
 .active { display: block; }
 
-<span class="comment">// In the DOM</span>
-&lt;img src=<span class="string">"images/loading.gif"</span> id=<span class="string">"my-button-spinner"</span> <span class="keyword">class</span>=<span class="string">"hide"</span>/>
+// In the DOM
+&lt;img src=&quot;images/loading.gif&quot; id=&quot;my-button-spinner&quot; class=&quot;hide&quot;/&gt;
 
-<span class="comment">// Activate loading</span>
-$(<span class="string">'#my-button-spinner'</span>).addClass(<span class="string">'active'</span>);
+// Activate loading
+$(&#39;#my-button-spinner&#39;).addClass(&#39;active&#39;);
 
-<span class="comment">// Hide loading</span>
-$(<span class="string">'#my-button-spinner'</span>).removeClass(<span class="string">'active'</span>);</code></pre>
-<p>This is, of course, considering you are not using one of the template or MVC frameworks which will present their own solutions.
-
-
-</p>
-<h3>Use Promises, not callbacks.</h3>
-<p>One of the &quot;recent&quot; advancements in the Javascript is the growing usage of the <a href="http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/">Promises</a> pattern. There is a plethora of tutorials and implementations to be found by Googling, and I suggest you get up to speed if you haven&apos;t so far.
-
-</p>
-<p>Promises can be found in lots of places - including jQuery. In fact, the <code>jqXHR</code> implements a Promise interface. This enables us to do some interesting things with it:
-
-</p>
-<pre><code><span class="keyword">var</span> firstAsyncCall = $.get(<span class="string">'/some/info/1'</span>);
-<span class="keyword">var</span> secondAsyncCall = $.get(<span class="string">'/some/info/2'</span>);
-<span class="comment">// Only act when both calls are completed successfully!</span>
-$.when(firstAsyncCall, secondAsyncCall).done(<span class="keyword">function</span>(result1, result2){
-    <span class="comment">// Act on both results.</span>
+// Hide loading
+$(&#39;#my-button-spinner&#39;).removeClass(&#39;active&#39;);</code></pre>
+<p>This is, of course, considering you are not using one of the template or MVC frameworks which will present their own solutions.</p>
+<h3 id="use-promises-not-callbacks.">Use Promises, not callbacks.</h3>
+<p>One of the “recent” advancements in the Javascript is the growing usage of the <a href="http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/">Promises</a> pattern. There is a plethora of tutorials and implementations to be found by Googling, and I suggest you get up to speed if you haven’t so far.</p>
+<p>Promises can be found in lots of places - including jQuery. In fact, the <code>jqXHR</code> implements a Promise interface. This enables us to do some interesting things with it:</p>
+<pre><code>var firstAsyncCall = $.get(&#39;/some/info/1&#39;);
+var secondAsyncCall = $.get(&#39;/some/info/2&#39;);
+// Only act when both calls are completed successfully!
+$.when(firstAsyncCall, secondAsyncCall).done(function(result1, result2){
+    // Act on both results.
 });</code></pre>
-<p>This is but a simple example of what you can accomplish with promises. So, stop using <code>success</code> and <code>error</code> callbacks and get to know the <code>done</code>, <code>fail</code> and <code>always</code> family of methods in the jqXHR.
-
-
-</p>
-<h3>Conclusion</h3>
-<p>Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I&apos;m looking forward for his next talk.
-
-
-</p>
+<p>This is but a simple example of what you can accomplish with promises. So, stop using <code>success</code> and <code>error</code> callbacks and get to know the <code>done</code>, <code>fail</code> and <code>always</code> family of methods in the jqXHR.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I’m looking forward for his next talk.</p>
 </section>
       </article><a href="http://news.ycombinator.com/submit" class="hn-share-button">Discuss on Hacker News</a><br><a href="/" class="back"><< back to index</a>
     </div>
