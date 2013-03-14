@@ -5,7 +5,7 @@ author: gadr90
 
 > That's okay, I'll remember it.
 
-And yet, you forgot it. The only way to never forget anything is using a *mind extension*. This is any tool (or combination of) which you use to hold **everything** that you must keep in mind. From pen & paper to [Workflowy][4], here are the key points to succesfully managing it.
+And yet, you forgot it. The only way to never forget anything is using a *mind extension*. This is any tool which you use to hold **everything** that you must keep in mind. From pen & paper to [Workflowy][4], here are the key points to succesfully managing it.
 
 [4]: https://workflowy.com/
 

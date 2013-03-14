@@ -6,6 +6,7 @@ author: gadr90
 **Benvenuto** é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo da plataforma Java na plataforma Node.js.
 
 <span class="more"></span>
+<hr>
 
 <p style="text-align:center">Pontifícia Universidade do Rio de Janeiro</p>
 
@@ -408,8 +409,11 @@ Entretanto, empresas novas e pequenas devem focar seus esforços nas novas tecno
 A escolha entre novas e velhas tecnologias não é uma opção. Utilizar a linguagem e o ambiente que vai solucionar seu problema de forma mais simples é imperativo.
 
 [^stack]: A technology stack comprises the layers of components or services that are used to provide a software solution or application.
+
 [^tradicional]: No ambiente Java de 2011, JBoss Seam e Spring MVC seriam os frameworks já considerados "tradicionais", enquanto o Play Framework era relativamente novo e quebrava muitos paradigmas.
+
 [^fallback]: An alternative plan that may be used in an emergency. Nesse contexto, uma tecnologia menos elegante ou menos performática mas que cumpre o mesmo papel.
+
 [^desnormalizar]: Denormalization is the process of attempting to optimize the read performance of a database by adding redundant data or by grouping data.
 
 [1]: http://shootout.alioth.debian.org/u32/which-programs-are-fastest.php
