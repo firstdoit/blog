@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Junge" type="text/css">
     <link rel="stylesheet" href="/css/github.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css">
+    <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+      
+    </script>
   </head>
   <body>
     <header>
@@ -21,31 +27,45 @@
       <p>by&nbsp<span class="author"><a href="mailto:gadr90@gmail.com">Guilherme Rodrigues</a></span>
       </p>
       <article class="post">
-        <section class="content"><p>This saturday, I’ve been to the <a href="http://www.riojs.org/">Rio.JS</a> conference, a Rio de Janeiro-based Javascript developer event. I would like to congratulate the organizers for the effort, as I am sure that pulling such an event is no easy feat, and the formation of a local community is a noble intent.</p>
-<p>One of the presenters, <a href="http://hugolnx.com/">Hugo Roque</a> asked for feedback on his <a href="http://www.slideshare.net/hugolnx/apresentacao-17070731">lecture</a>. Here, I’ll try and offer some opinions on his proposed solutions which I hope will be helpful.</p>
-<span class="more"></span>
-<p>Let’s start at the beginning.</p>
-<h3 id="if-you-suspect-your-public-knows-the-basics-of-your-subject-be-quick-presenting-it.">If you suspect your public knows the basics of your subject, be quick presenting it.</h3>
-<p>At a javascript developer conference, I feel there is no need to explain the uses or benefits of AJAX. This technology is sufficiently <a href="http://en.wikipedia.org/wiki/Ajax_(programming)#History">old and commonplace</a> that the time would be better used with more advanced discussion.</p>
-<h3 id="save-a-reference-to-your-jqxhr-object">Save a reference to your jqXHR object</h3>
+        <section class="content"><p>This saturday, I&#8217;ve been to the <a href="http://www.riojs.org/">Rio.JS</a> conference, a Rio de Janeiro-based Javascript developer event. I would like to congratulate the organizers for the effort, as I am sure that pulling such an event is no easy feat, and the formation of a local community is a noble intent. </p>
+
+<p>One of the presenters, <a href="http://hugolnx.com/">Hugo Roque</a> asked for feedback on his <a href="http://www.slideshare.net/hugolnx/apresentacao-17070731">lecture</a>. Here, I&#8217;ll try and offer some opinions on his proposed solutions which I hope will be helpful.</p>
+
+<p><span class="more"></span></p>
+
+<p>Let&#8217;s start at the beginning.  </p>
+
+<h3 id="ifyoususpectyourpublicknowsthebasicsofyoursubjectbequickpresentingit">If you suspect your public knows the basics of your subject, be quick presenting it.</h3>
+
+<p>At a javascript developer conference, I feel there is no need to explain the uses or benefits of AJAX. This technology is sufficiently <a href="http://en.wikipedia.org/wiki/Ajax_(programming)#History">old and commonplace</a> that the time would be better used with more advanced discussion.  </p>
+
+<h3 id="saveareferencetoyourjqxhrobject">Save a reference to your jqXHR object</h3>
+
 <p>One of the common pitfalls of asynchronous communication is the lack of user feedback, <em>e.g.</em>, no <em>loading</em> hint is shown after a user presses a button that needs communication and/or processing. To avoid making multiple requests as a result of the user clicking the button multiple times, the presenter recommends the following:</p>
-<pre><code>$(&quot;a&quot;).one(&quot;click&quot;, function (event) { 
-    $.get(&quot;http://site.com&quot;, function (html) {
+
+<pre><code>$("a").one("click", function (event) { 
+    $.get("http://site.com", function (html) {
         //do something
     });
     event.preventDefault();
-});</code></pre>
+});
+</code></pre>
+
 <p>According to the jQuery documentation, with the <code>one</code> method,</p>
-<pre><code>&quot;the handler is unbound after its first invocation.&quot;</code></pre>
-<p>This isn’t very useful if your button is ever going to be clicked again. A nicer way to achieve the same effect is by saving a reference to the <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR</a> object which is returned by any ajax call, and reacting to it’s existence:</p>
+
+<pre><code>"the handler is unbound after its first invocation."
+</code></pre>
+
+<p>This isn&#8217;t very useful if your button is ever going to be clicked again. A nicer way to achieve the same effect is by saving a reference to the <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR</a> object which is returned by any ajax call, and reacting to it&#8217;s existence:</p>
+
 <pre><code>var myRequestToken = undefined;
-$(&#39;#my-button&#39;).click(function (e) {
+$('#my-button').click(function (e) {
     if (myRequestToken) {
         // There is a request going on - ignore this click.
         return false;
     }
     // Save a reference to the jqXHR. It is also a promise! (more on that soon)
-    myRequestToken = $.get(&#39;/promises/are/awesome/&#39;);
+    myRequestToken = $.get('/promises/are/awesome/');
 
     // After the request is done and returns the data successfuly, run this function.
     myRequestToken.done(function (data) { 
@@ -57,47 +77,67 @@ $(&#39;#my-button&#39;).click(function (e) {
     myRequestToken.always(function (data) {
         myRequestToken = undefined;
     });    
-});</code></pre>
-<p>In this fashion, we have enabled the button to be clicked again after any communication is done. This, however, doesn’t solve the UX problem. Which leads us to…</p>
-<h3 id="be-economic-with-your-dom-manipulation">Be economic with your DOM manipulation</h3>
+});
+</code></pre>
+
+<p>In this fashion, we have enabled the button to be clicked again after any communication is done. 
+This, however, doesn&#8217;t solve the UX problem. Which leads us to&#8230;</p>
+
+<h3 id="beeconomicwithyourdommanipulation">Be economic with your DOM manipulation</h3>
+
 <p>Adding and removing DOM is one of the most common use cases for Javascript, and is also one of the nastiest. Manipulating the DOM in a imperative fashion is a fast-track to pain. This is why the community is currently drowning on a multitude of <a href="http://addyosmani.github.com/todomvc/">MVC frameworks</a>, <a href="http://garann.github.com/template-chooser/">templating engines</a> and whatnot.</p>
+
 <p>One of the classic misuses of jQuery is adding an arbitrary <code>img</code> tag after an event:</p>
-<pre><code>$(&quot;a&quot;).one(&quot;click&quot;, function (event) {
-    var img = $(&quot;&lt;img src=&#39;images/loading.gif&#39;&gt;&quot;);
+
+<pre><code>$("a").one("click", function (event) {
+    var img = $("&lt;img src='images/loading.gif'&gt;");
     img.appendTo(document.body);
-    $.get(&quot;http://site.com&quot;, function () {
+    $.get("http://site.com", function () {
         // faz alguma coisa
         img.remove();
     });
-});</code></pre>
-<p>This has the added disadvantage of starting to load the image only after the node is appended. That means a user on a slow connection will continue to receive no feedback on your ajax button, because the loading image will not appear until it itself is loaded.</p>
-<p>The solution can be, in fact, much simpler:</p>
+});
+</code></pre>
+
+<p>This has the added disadvantage of starting to load the image only after the node is appended. That means a user on a slow connection will continue to receive no feedback on your ajax button, because the loading image will not appear until it itself is loaded. </p>
+
+<p>The solution can be, in fact, much simpler: </p>
+
 <pre><code>// CSS
 .hide { display: none; }
 .active { display: block; }
 
 // In the DOM
-&lt;img src=&quot;images/loading.gif&quot; id=&quot;my-button-spinner&quot; class=&quot;hide&quot;/&gt;
+&lt;img src="images/loading.gif" id="my-button-spinner" class="hide"/&gt;
 
 // Activate loading
-$(&#39;#my-button-spinner&#39;).addClass(&#39;active&#39;);
+$('#my-button-spinner').addClass('active');
 
 // Hide loading
-$(&#39;#my-button-spinner&#39;).removeClass(&#39;active&#39;);</code></pre>
+$('#my-button-spinner').removeClass('active');
+</code></pre>
+
 <p>This is, of course, considering you are not using one of the template or MVC frameworks which will present their own solutions.</p>
-<h3 id="use-promises-not-callbacks.">Use Promises, not callbacks.</h3>
-<p>One of the “recent” advancements in the Javascript is the growing usage of the <a href="http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/">Promises</a> pattern. There is a plethora of tutorials and implementations to be found by Googling, and I suggest you get up to speed if you haven’t so far.</p>
+
+<h3 id="usepromisesnotcallbacks">Use Promises, not callbacks.</h3>
+
+<p>One of the &#8220;recent&#8221; advancements in the Javascript is the growing usage of the <a href="http://blog.parse.com/2013/01/29/whats-so-great-about-javascript-promises/">Promises</a> pattern. There is a plethora of tutorials and implementations to be found by Googling, and I suggest you get up to speed if you haven&#8217;t so far.</p>
+
 <p>Promises can be found in lots of places - including jQuery. In fact, the <code>jqXHR</code> implements a Promise interface. This enables us to do some interesting things with it:</p>
-<pre><code>var firstAsyncCall = $.get(&#39;/some/info/1&#39;);
-var secondAsyncCall = $.get(&#39;/some/info/2&#39;);
+
+<pre><code>var firstAsyncCall = $.get('/some/info/1');
+var secondAsyncCall = $.get('/some/info/2');
 // Only act when both calls are completed successfully!
 $.when(firstAsyncCall, secondAsyncCall).done(function(result1, result2){
     // Act on both results.
-});</code></pre>
+});
+</code></pre>
+
 <p>This is but a simple example of what you can accomplish with promises. So, stop using <code>success</code> and <code>error</code> callbacks and get to know the <code>done</code>, <code>fail</code> and <code>always</code> family of methods in the jqXHR.</p>
+
 <h3 id="conclusion">Conclusion</h3>
-<p>Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I’m looking forward for his next talk.</p>
-</section>
+
+<p>Delivering a presentation is a hard task for most, and I thank Hugo for his effort. I hope he is not offended by this post and I&#8217;m looking forward for his next talk.</p></section>
       </article><a href="http://news.ycombinator.com/submit" class="hn-share-button">Discuss on Hacker News</a><br><a href="/" class="back"><< back to index</a>
     </div>
     <footer>

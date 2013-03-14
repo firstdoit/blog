@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Junge" type="text/css">
     <link rel="stylesheet" href="/css/github.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css">
+    <script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+      
+    </script>
   </head>
   <body>
     <header>
@@ -22,79 +28,75 @@
       </p>
       <article class="post">
         <section class="content"><p><strong>Benvenuto</strong> é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo da plataforma Java na plataforma Node.js.</p>
-<span class="more"></span>
-<p style="text-align:center">
-Pontifícia Universidade do Rio de Janeiro
-</p>
 
-<div class="figure">
-<img src="/articles/benvenuto-node/logo-puc-small.png" /><p class="caption"></p>
-</div>
-<br/>
-<p style="text-align:center">
-Departamento de Informática
-</p>
+<p><span class="more"></span></p>
 
-<div class="figure">
-<img src="/articles/benvenuto-node/logo-di-small.png" /><p class="caption"></p>
-</div>
-<br/>
-<h2 style="text-align:center">
-Benvenuto Node
-</h2>
+<hr>
 
-<h4 style="text-align:center">
-Estudo de caso: Migração de um Web-App Java para Node.js
-</h3></p>
+<p style="text-align:center">Pontifícia Universidade do Rio de Janeiro</p>
 
-<br/>
-<p style="text-align:center">
-Orientador:
-</p>
-<p style="text-align:center">
-<strong>Edmundo Torreão</strong>
-</p>
-<p style="text-align:center">
-Aluno:
-</p>
-<p style="text-align:center">
-<strong>Guilherme Rodrigues</strong>
-</p>
+<p><img src="/articles/benvenuto-node/logo-puc-small.png" alt="" title="" /></p>
 
-<p style="text-align:center">
-6 de Dezembro de 2012
-</p>
-<br/>
+<p><br/></p>
+
+<p style="text-align:center">Departamento de Informática</p>
+
+<p><img src="/articles/benvenuto-node/logo-di-small.png" alt="" title="" /></p>
+
+<p><br/></p>
+
+<h2 style="text-align:center">Benvenuto Node</h2>
+
+<p><h4 style="text-align:center">Estudo de caso: Migração de um Web-App Java para Node.js</h3></p></p>
+
+<p><br/></p>
+
+<p style="text-align:center">Orientador:</p>
+
+<p style="text-align:center"><strong>Edmundo Torreão</strong></p>
+
+<p style="text-align:center">Aluno:</p>
+
+<p style="text-align:center"><strong>Guilherme Rodrigues</strong></p>
+
+<p style="text-align:center">6 de Dezembro de 2012</p>
+
+<p><br/></p>
+
 <p><strong>Benvenuto</strong> é um webapp para auxiliar a distribuição de mesas em restaurantes. Este artigo detalha o processo de reescrever um aplicativo do stack Java no stack Node.js.</p>
+
 <p>O sistema tem duas telas principais:</p>
+
 <ul>
 <li>Um mapa de mesas, no qual todas as mesas são desenhadas na tela na cor verde ou vermelha, dependendo se a mesa está atualmente livre ou ocupada. Aqui, pode-se selecionar mesas e ocupá-las.</li>
 <li>Uma lista de mesas atualmente ocupadas, onde as mesas têm uma indicação de cor dependendo de há quanto tempo estão ocupadas. Aqui, pode-se selecionar mesas e liberá-las.</li>
 </ul>
-<br/>
-<p style="text-align:center">
-Interface da Recepção
-</p>
 
-<div class="figure">
-<img src="/articles/benvenuto-node/bn3.png" /><p class="caption"></p>
-</div>
-<br/>
-<p style="text-align:center">
-Interface do Salão
-</p>
+<p><br/></p>
 
-<div class="figure">
-<img src="/articles/benvenuto-node/bn4.png" /><p class="caption"></p>
-</div>
-<br/>
-<p>Um requisito fundamental do sistema é que as atualizações sobre o mapa de mesas devem ser percebidas em <em>realtime</em> por todos os clients. A primeira versão do sistema foi construída usando um stack<sup><a href="/articles/benvenuto-node/#fn1" class="footnoteRef" id="fnref1">1</a></sup> <em>semi-tradicional</em><sup><a href="/articles/benvenuto-node/#fn2" class="footnoteRef" id="fnref2">2</a></sup> de desenvolvimento web:</p>
+<p style="text-align:center">Interface da Recepção</p>
+
+<p><img src="/articles/benvenuto-node/bn3.png" alt="" title="" /></p>
+
+<p><br/></p>
+
+<p style="text-align:center">Interface do Salão</p>
+
+<p><img src="/articles/benvenuto-node/bn4.png" alt="" title="" /></p>
+
+<p><br/></p>
+
+<p>Um requisito fundamental do sistema é que as atualizações sobre o mapa de mesas devem ser percebidas em <em>realtime</em> por todos os clients.
+A primeira versão do sistema foi construída usando um stack<sup><a href="/articles/benvenuto-node/#fn1" class="footnoteRef" id="fnref1">1</a></sup> <em>semi-tradicional</em><sup><a href="/articles/benvenuto-node/#fn2" class="footnoteRef" id="fnref2">2</a></sup> de desenvolvimento web:</p>
+
 <ul>
-<li>Play Framework 1.2 (2011) - um framework web <em>full-stack</em> Java, que utiliza o servidor JBoss Netty. Tem como principais objetivos a escalabilidade e simplicidade de desenvolvimento. Favorece aplicações “stateless” - não dá suporte a sessões.</li>
+<li>Play Framework 1.2 (2011) - um framework web <em>full-stack</em> Java, que utiliza o servidor JBoss Netty. Tem como principais objetivos a escalabilidade e simplicidade de desenvolvimento. Favorece aplicações &#8220;stateless&#8221; - não dá suporte a sessões.</li>
 <li>PostgreSQL 9.0 (2010) - um banco de dados relacional SQL open-source.</li>
 <li>KnockoutJS 2.0 (2011) - uma biblioteca Javascript que implementa o padrão MVVM, permitindo <em>data-bind</em> entre objetos Javascript e o DOM, eliminando a necessidade de grandes quantidades de código JQuery para dinamizar a interface.</li>
 </ul>
+
 <p>Esse artigo irá discutir as vantagens e dificuldades encontradas ao realizar o port deste aplicativo para um stack de tecnologias mais recentes e mais orientadas a <em>single-page applications</em>. O stack escolhido foi:</p>
+
 <ul>
 <li>Node.js (2011) - um <em>runtime</em> de Javascript no server-side. É <em>event-driven</em> e utiliza I/O assíncrono, com objetivo de maximizar a escalabilidade. Sua principal vantagem é permitir a utilização da mesma linguagem tanto no browser quanto no servidor. Isso implica em grandes facilidades para o desenvolvimento.</li>
 <li>Express 3.0 (2012) - um framework web para Node.js.</li>
@@ -102,16 +104,27 @@ Interface do Salão
 <li>CoffeeScript - uma elegante linguagem que <em>compila para</em> Javascript. Copia algumas linguagens mais recentes como Ruby e Python nos seus melhores pontos e esconde as piores partes do Javascript.</li>
 <li>Redis - Um banco de dados chave/valor extremamente rápido, em memória, voltado para datasets pequenos.</li>
 </ul>
-<h3 id="introdução">Introdução</h3>
-<h3 id="parte-1---motivação-e-principais-dificuldades">Parte 1 - Motivação e Principais Dificuldades</h3>
-<h4 id="orm-e-a-dança-de-formatos">ORM e a dança de formatos</h4>
-<p>Ao desenvolver um aplicativo “desktop”, o arquiteto de software tem total controle sobre todas as partes do sistema: a persistência, a lógica de negócio e a visualização e interação.</p>
+
+<h3 id="introduo">Introdução</h3>
+
+<h3 id="parte1motivaoeprincipaisdificuldades">Parte 1 - Motivação e Principais Dificuldades</h3>
+
+<h4 id="ormeadanadeformatos">ORM e a dança de formatos</h4>
+
+<p>Ao desenvolver um aplicativo &#8220;desktop&#8221;, o arquiteto de software tem total controle sobre todas as partes do sistema: a persistência, a lógica de negócio e a visualização e interação.</p>
+
 <p>Naturalmente, é comum utilizar-se de apenas uma linguagem de programação para escrever todas as partes de um aplicativo, a fim de minizar a complexidade de comunicação entre os módulos ou partes do sistema. Entretanto, ao escrever aplicativos web, tipicamente encontram-se algumas severas restrições.</p>
+
 <p>Uma das maiores restrições é aquela inerente da <em>visualização</em> e <em>interação com o usuário</em>, que serão necessariamente expressas através de um documento HTML e um <em>web browser</em>. Dessa forma, introduz-se, no mínimo, um nível de tradução entre a lógica de negócio, escrito em alguma linguagem, e a apresentação.</p>
+
 <p>Tipicamente, os aplicativos web modernos se utilizam ainda de Javascript para dinamizar o conteúdo do documento HTML e permitir interações mais naturais, independentes do ciclo de request e response.</p>
+
 <p>Uma outra restrição é a comum necessidade de escalabilidade e utilização multi-usuário do sistema. Isso prejudica a escolha de ferramentas de persistência mais simples e diretamente disponíveis nas linguagens (como, em Java, a serialização de objetos). A escolha mais comum para persistência é um banco de dados relacional, como MySQL, PostgreSQL e outros.</p>
+
 <p>Assim, introduz-se mais um nível de tradução no aplicativo: a camada de persistência representa os objetos de negócio de uma forma diferente da camada de lógica de negócio, e um componente de <em>ORM</em> (Object Relational Mapping) é utilizado para facilitar essa conversão.</p>
+
 <p>Configura-se, então, a <em>dança dos formatos</em>: no ciclo de vida típico de um objeto, ele vai ser:</p>
+
 <ul>
 <li>Recuperado de uma tabela de banco de dados relacional</li>
 <li>Transformado em um objeto na linguagem de programação utilizada, o qual também apresenta comportamentos e possivelmente manipulará os seus dados ou de outros objetos</li>
@@ -119,79 +132,122 @@ Interface do Salão
 <li>Transformado em um objeto Javascript para permitir uma interação dinâmica.</li>
 <li>Finalmente, fará todo o caminho de volta até sua tabela relacional.</li>
 </ul>
+
 <p>Todas essas transformações implicam em grande quantidade de código que não se presta diretamente a solucionar os problemas de negócio os quais se propõe resolver o aplicativo.</p>
-<h4 id="comunicação-realtime---long-polling">Comunicação Realtime - Long polling</h4>
+
+<h4 id="comunicaorealtimelongpolling">Comunicação Realtime - Long polling</h4>
+
 <p>Muitos aplicativos têm por requisito a comunicação em tempo real entre múltiplos clientes. Até pouco tempo atrás, isso não era possível no ambiente web devido à precariedade dos browsers, e aplicativos tempo real eram tipicamente <em>desktop</em>.</p>
+
 <p>Recentemente, a tecnologia AJAX (Asynchronous JavaScript and XML) permitiu a comunicação com o servidor sem necessitar de uma atualização completa da página. Com isso, foram desenvolvidas algumas técnicas para estabelecer a comunicação em tempo real com o servidor.</p>
+
 <p>Uma das técnicas mais famosas é o <em>long-polling</em>. Ela consiste basicamente de três passos:</p>
+
 <ul>
 <li>O browser faz um request AJAX para um endpoint no servidor.</li>
 <li>O servidor mantém esse request aberto enquanto nenhum evento significativo é gerado pela lógica de negócio</li>
 <li>Quando um evento é gerado, o servidor responde para o browser, que reinicia o ciclo emitindo um novo request.</li>
 </ul>
+
 <p>Essa técnica é utilizada com sucesso pelo Benvenuto, mas ela é sujeita a alguns problemas:</p>
+
 <ul>
 <li>Se um request AJAX é interrompido, não existe nenhum outro jeito do servidor notificar o cliente de novos eventos. Assim, a implementação deve ser resistente a quedas de conexão e saber reestabelecer o pedido sempre que ocorrerem problemas.</li>
 <li>Browsers mobile estão sujeitos a muitas interrupções que podem parar requests AJAX, como entrar em modo <em>sleep</em>, recebimento de chamadas, etc.</li>
 <li>O servidor deve saber lidar com as chamadas de forma eficiente para não manter threads ocupadas enquanto serve um request.</li>
 </ul>
+
 <p>Assim, é necessário grande cuidado ao implementar uma solução de long-polling.</p>
-<h3 id="parte-2---escolha-das-tecnologias-e-benefícios-esperados">Parte 2 - Escolha das Tecnologias e Benefícios Esperados</h3>
-<h4 id="node.js-e-express-3.0">Node.js e Express 3.0</h4>
+
+<h3 id="parte2escolhadastecnologiasebenefciosesperados">Parte 2 - Escolha das Tecnologias e Benefícios Esperados</h3>
+
+<h4 id="nodejseexpress30">Node.js e Express 3.0</h4>
+
 <p>Node.js é uma plataforma para execução de Javascript. Assim como Ruby e Python, Javascript é uma linguagem dinâmica e interpretada: ela necessita de um programa que interprete seus comandos para um nível mais baixo. No browser Google Chrome, a <em>engine</em> responsável por interpretar Javascript se chama <strong>V8</strong>. O Node.js utiliza a engine V8 e disponibiliza bibliotecas para transformar o Javascript numa linguagem viável para o server-side.</p>
+
 <p>As vantagens de utilizar o Node.js são muitas, especialmente ao considerar o quesito performance:</p>
+
 <ul>
 <li>A engine V8 é <a href="http://shootout.alioth.debian.org/u32/which-programs-are-fastest.php">muito performática</a>, o que por sua vez garante boa performance do ambiente Node.js</li>
 <li>Node.js utiliza um loop de eventos que visa otimizar a performance de operações intensiva em I/O. Alguns benchmarks demonstram que ele é capaz de <a href="http://zgadzaj.com/benchmarking-nodejs-basic-performance-tests-against-apache-php">mais de 4000 requests por segundo</a>, ou 5x mais do que um stack Apache/PHP.</li>
-<li>Menor utilização de memória, comparado com Java e outros frameworks mais “robustos”.</li>
+<li>Menor utilização de memória, comparado com Java e outros frameworks mais &#8220;robustos&#8221;.</li>
 <li>Lida muito bem com múltiplos clientes concorrentes. Alguns benchmarks já conseguiram lidar com mais de <a href="http://blog.caustik.com/2012/04/10/node-js-w250k-concurrent-connections/">250 mil conexões concorrentes</a></li>
 </ul>
+
 <p>Mas performance não é o único motivo para utilizar o Node.js. Ao utilizar a mesma linguagem no client e no servidor, é possível reutilizar código entre esses dois ambientes e diminuir a impedância entre eles. Menos conversões significa um código menor e mais focado em resolver os problemas de negócio.</p>
+
 <p>Uma outra notável qualidade do Node.js é sua comunidade e a organização de pacotes em torno do <strong>npm</strong> (node package manager). Inspirado nas <em>gems</em> do Ruby, o node já nasceu com o conceito de pacotes e a quantidade de bibliotecas open-source cresce velozmente.</p>
+
 <p>Um desses pacotes é o excelente <strong>Express</strong>. Se trata de um framework para desenvolvimento de aplicativos web. Ele oferece um modelo simples para a criação rápida de aplicativos, solucionando muitos problemas comuns como autenticação, manipulação de cookies, etc. Atualmente é o framework web mais utilizado para Node.js.</p>
-<h4 id="socket.io">Socket.IO</h4>
+
+<h4 id="socketio">Socket.IO</h4>
+
 <p>Socket.IO é uma biblioteca que oferece comunicação realtime entre um servidor Node.js e seus clientes. Para tanto, ela disponibiliza uma API de publish/subscribe muito simples, acessível de ambos os lados do aplicativo.</p>
+
 <p>Uma vez conectado no servidor Node.js, um cliente pode se inscrever nos tópicos que lhe interessam e enviar mensagens em tópicos, assim como o servidor. Dessa forma, existe uma comunicação transparente entre as partes, independente de qualquer ciclo de request e response.</p>
-<p>Como canal de comunicação, o Socket.IO irá preferir utilizar <a href="http://en.wikipedia.org/wiki/WebSocket"><em>WebSockets</em></a> se possível, utilizando <em>fallbacks</em><sup><a href="/articles/benvenuto-node/#fn3" class="footnoteRef" id="fnref3">3</a></sup> como Flash ou long-polling se necessário. Todos os cuidados são tomados, entretanto, para garantir o recebimento das mensagens pelos clientes e pelo servidor, sem que o usuário da biblioteca tenha que se preocupar com problemas como interrupção de conexão.</p>
+
+<p>Como canal de comunicação, o Socket.IO irá preferir utilizar <a href="http://en.wikipedia.org/wiki/WebSocket">*WebSockets*</a> se possível, utilizando <em>fallbacks</em><sup><a href="/articles/benvenuto-node/#fn3" class="footnoteRef" id="fnref3">3</a></sup> como Flash ou long-polling se necessário. Todos os cuidados são tomados, entretanto, para garantir o recebimento das mensagens pelos clientes e pelo servidor, sem que o usuário da biblioteca tenha que se preocupar com problemas como interrupção de conexão.</p>
+
 <p>A utilização do Socket.IO, portanto, traz benefícios óbvios para o Benvenuto pois descarta a necessidade de uma implementação própria de long-polling, disponibilizando uma forma eficiente e segura de trocar mensagens entre o servidor e os clientes.</p>
+
 <h4 id="redis">Redis</h4>
+
 <p>Redis é um banco de dados chave-valor em memória. Ele foca em atender os problemas com <em>datasets</em> pequenos, que caibam completamente na memória principal. Em um banco de dados chave-valor, não existe a noção de uma tabela com campos pré-definidos. Em geral, armazena-se uma string (um valor) com um nome (uma chave). Para acessar esse valor, é preciso ter em mãos a chave.</p>
-<p>Dado que a serialização JSON é uma forma muito comum e conveniente de transmitir objetos Javascript, bancos de dado chave-valor vêm sendo utilizados com grande sucesso pelos desenvolvedores do stack Node.js. Basta serializar um objeto e guardar o JSON com uma chave identificadora. Normalmente, utiliza-se o conceito de “namespace” para artificialmente agrupar chaves que se relacionam. Por exemplo, poderíamos guardar um usuario com a chave “app:user:3” onde 3 é o id do usuário.</p>
-<p>O banco Redis beneficia o Benvenuto principalmente por simplificar a forma de armazenamento dos objetos, sem necessitar da criação de um “esquema” de banco de dados, e por apresentar um significativo ganho de performance em relação a bancos relacionais, que utilizam pesadamente o acesso à disco.</p>
-<h3 id="parte-3---estratégia-de-migração-do-server-side">Parte 3 - Estratégia de migração do server-side</h3>
-<h4 id="mimicando-a-api-json-no-node.js">Mimicando a API JSON no Node.js</h4>
+
+<p>Dado que a serialização JSON é uma forma muito comum e conveniente de transmitir objetos Javascript, bancos de dado chave-valor vêm sendo utilizados com grande sucesso pelos desenvolvedores do stack Node.js. Basta serializar um objeto e guardar o JSON com uma chave identificadora. Normalmente, utiliza-se o conceito de &#8220;namespace&#8221; para artificialmente agrupar chaves que se relacionam. Por exemplo, poderíamos guardar um usuario com a chave &#8220;app:user:3&#8221; onde 3 é o id do usuário.</p>
+
+<p>O banco Redis beneficia o Benvenuto principalmente por simplificar a forma de armazenamento dos objetos, sem necessitar da criação de um &#8220;esquema&#8221; de banco de dados, e por apresentar um significativo ganho de performance em relação a bancos relacionais, que utilizam pesadamente o acesso à disco.</p>
+
+<h3 id="parte3estratgiademigraodoserverside">Parte 3 - Estratégia de migração do server-side</h3>
+
+<h4 id="mimicandoaapijsonnonodejs">Mimicando a API JSON no Node.js</h4>
+
 <p>Escolhidas as tecnologias que desejamos utilizar para escrever a nova versão do Benvenuto, resta a pergunta: Por onde começar?</p>
+
 <p>Ao tomar essa decisão, um ponto foi decisivo: a camada de apresentação deveria ser mantida sem modificações - continuando a consumir JSON de uma API e apresentar a interface com a biblioteca KnockoutJS.</p>
+
 <p>Assim, o primeiro protótipo do aplicativo Benvenuto em Node.js consistiu de uma API <em>mock</em> que retornava apenas JSON estático. Para fazer isso, todas as chamadas que retornavam JSON no serviço antigo tiveram um <em>exemplar</em> de JSON recortado e guardado em um arquivo, que era lido e entregue pelo novo servidor.</p>
+
 <p>Feito isso, passava a ser necessário imitar de fato o comportamento da API - permitindo, por exemplo, ocupação e liberação de lugares. Para tanto, uma variável em memória passou a guardar todo o JSON estático do mapa de mesas e a ser modificada pelas chamadas à API. O programa passou a apresentar o mesmo comportamento que o serviço antigo, em menos de 200 linhas de código.</p>
-<p>Claro, nesse momento ainda não existe a persistência de objetos. A cada “reset” do aplicativo, o estado era perdido. Ainda assim, já é possível perceber que existe uma clara queda de complexidade no código do servidor.</p>
-<h3 id="parte-4---estratégia-de-migração-da-persistência">Parte 4 - Estratégia de migração da persistência</h3>
-<h4 id="estruturando-os-dados-para-um-banco-chavevalor">Estruturando os dados para um banco chave/valor</h4>
+
+<p>Claro, nesse momento ainda não existe a persistência de objetos. A cada &#8220;reset&#8221; do aplicativo, o estado era perdido. Ainda assim, já é possível perceber que existe uma clara queda de complexidade no código do servidor.</p>
+
+<h3 id="parte4estratgiademigraodapersistncia">Parte 4 - Estratégia de migração da persistência</h3>
+
+<h4 id="estruturandoosdadosparaumbancochavevalor">Estruturando os dados para um banco chave/valor</h4>
+
 <p>Resolvida a camada da API JSON, é preciso estabelecer uma forma conveniente de modelar nossos objetos para uma persistência simples e eficiente utilizando o banco REDIS.</p>
+
 <p>A estrutura original de objetos utilizava-se pesadamente de <em>foreign keys</em> - típico de um banco de dados relacional. Entretanto, <em>foreign keys</em> não são fáceis de utilizar em um banco chave-valor pois não existe suporte nenhum à essa lógica na camada do banco.</p>
+
 <p>Por exemplo, a classe GenericTable, que representa uma mesa, era definida como:</p>
+
 <pre><code>@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name=&quot;table_type&quot;,discriminatorType=DiscriminatorType.CHAR)
-@DiscriminatorValue(&quot;N&quot;)
+@DiscriminatorColumn(name="table_type",discriminatorType=DiscriminatorType.CHAR)
+@DiscriminatorValue("N")
 public class GenericTable extends Model {
     public int maxNumberOfPlaces = 1;
-        public String label = &quot;&quot;;
-        @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;table&quot;)
+        public String label = "";
+        @OneToMany(cascade = CascadeType.ALL, mappedBy = "table")
         public List&lt;Place&gt; places = new ArrayList&lt;Place&gt;();
     @Embedded
     public Point position;
     @ManyToOne
     public Layout layout;
 (...)
-}</code></pre>
-<p><br/> E a classe Place, que representa um “lugar” à mesa:</p>
+}
+</code></pre>
+
+<p><br/>
+E a classe Place, que representa um &#8220;lugar&#8221; à mesa:</p>
+
 <pre><code>@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name=&quot;place_type&quot;,discriminatorType=DiscriminatorType.CHAR)
-@DiscriminatorValue(&quot;N&quot;)
+@DiscriminatorColumn(name="place_type",discriminatorType=DiscriminatorType.CHAR)
+@DiscriminatorValue("N")
 public class Place extends Model {
-    public String label = &quot;&quot;;
+    public String label = "";
     @Embedded
     public Point position;
     public int numberOfOccupants;
@@ -199,18 +255,22 @@ public class Place extends Model {
     @ManyToOne
     public GenericTable table;
 (...)
-}</code></pre>
-<p><br/> O JSON produzido pela API ao pedir todas as mesas livres resultante:</p>
+}
+</code></pre>
+
+<p><br/>
+O JSON produzido pela API ao pedir todas as mesas livres resultante:</p>
+
 <pre><code>{
     gridSizePixels : 10,
-    name : &quot;Couveflor-PUC-1&quot;,
+    name : "Couveflor-PUC-1",
     tables : [ {
-        class : &quot;models.RoundTable&quot;,
+        class : "models.RoundTable",
         id : 2,
-        label : &quot;01&quot;,
+        label : "01",
         places : [ {
             id : 3,
-            label : &quot;01A&quot;,
+            label : "01A",
             numberOfOccupants : 1,
             occupied : false,
             rotation : 0.071525864538728,
@@ -218,7 +278,7 @@ public class Place extends Model {
             y : -19
         }, {
             id : 4,
-            label : &quot;01B&quot;,
+            label : "01B",
             numberOfOccupants : 1,
             occupied : false,
             rotation : 45.2975697722287,
@@ -228,12 +288,12 @@ public class Place extends Model {
         x : 9,
         y : 7
     }, {
-        class : &quot;models.RoundTable&quot;,
+        class : "models.RoundTable",
         id : 11,
-        label : &quot;09&quot;,
+        label : "09",
         places : [ {
             id : 12,
-            label : &quot;09A&quot;,
+            label : "09A",
             numberOfOccupants : 1,
             occupied : false,
             rotation : 0.071525864538728,
@@ -241,7 +301,7 @@ public class Place extends Model {
             y : -19
         }, {
             id : 13,
-            label : &quot;09B&quot;,
+            label : "09B",
             numberOfOccupants : 1,
             occupied : false,
             rotation : 45.2975697722287,
@@ -251,16 +311,22 @@ public class Place extends Model {
         x : 34,
         y : 7
     } ]
-}</code></pre>
-<p><br/> Como se pode ver, a estrutura principal consiste em um array de <em>tables</em>, cada uma com seu conjunto de <em>places</em>. Isso representa um grande inconveniente para persistir esses objetos no REDIS, onde não há como facilmente como fazer referência a “objetos filhos”.</p>
+}
+</code></pre>
+
+<p><br/>
+Como se pode ver, a estrutura principal consiste em um array de <em>tables</em>, cada uma com seu conjunto de <em>places</em>. Isso representa um grande inconveniente para persistir esses objetos no REDIS, onde não há como facilmente como fazer referência a &#8220;objetos filhos&#8221;.</p>
+
 <p>A solução proposta foi inverter a estrutura - tornando <em>Place</em> o modelo principal. Ele é, afinal, o modelo que serve como referência para as ações de <em>ocupar</em> e <em>liberar</em>, por exemplo.</p>
+
 <p>Finalmente, foi necessário <em>desnormalizar</em><sup><a href="/articles/benvenuto-node/#fn4" class="footnoteRef" id="fnref4">4</a></sup> os atributos de <em>Table</em> dentro de cada <em>Place</em>. Isso incorre em um pequeno aumento do tamanho total necessário para representar o mapa de mesas, mas resolve o problema de múltiplas entidades. Um pequeno utilitário foi escrito transformar o formato antigo para o formato novo:</p>
+
 <pre><code>(function() {
   var flatPlaces, places, placesC, _u;
 
-  placesC = require(&#39;./places.js&#39;);
+  placesC = require('./places.js');
 
-  _u = require(&#39;underscore&#39;);
+  _u = require('underscore');
 
   places = placesC.collection;
 
@@ -285,100 +351,125 @@ public class Place extends Model {
 
   console.log(places);
 
-}).call(this);</code></pre>
-<p><br/> Agora, o resultado para a chamada do mapa de mesas produz um resultado muito mais simples:</p>
+}).call(this);
+</code></pre>
+
+<p><br/>
+Agora, o resultado para a chamada do mapa de mesas produz um resultado muito mais simples:</p>
+
 <pre><code>[
   {
-    &quot;id&quot;: 109,
-    &quot;label&quot;: &quot;37&quot;,
-    &quot;numberOfOccupants&quot;: 2,
-    &quot;occupied&quot;: false,
-    &quot;rotation&quot;: 0,
-    &quot;x&quot;: 0,
-    &quot;y&quot;: 0,
-    &quot;tableId&quot;: 108,
-    &quot;tableX&quot;: 33,
-    &quot;tableY&quot;: 91,
-    &quot;tableClass&quot;: &quot;models.GenericTable&quot;
+    "id": 109,
+    "label": "37",
+    "numberOfOccupants": 2,
+    "occupied": false,
+    "rotation": 0,
+    "x": 0,
+    "y": 0,
+    "tableId": 108,
+    "tableX": 33,
+    "tableY": 91,
+    "tableClass": "models.GenericTable"
   },
   {
-    &quot;id&quot;: 145,
-    &quot;label&quot;: &quot;53&quot;,
-    &quot;numberOfOccupants&quot;: 2,
-    &quot;occupied&quot;: false,
-    &quot;rotation&quot;: 0,
-    &quot;x&quot;: 0,
-    &quot;y&quot;: 0,
-    &quot;tableId&quot;: 144,
-    &quot;tableX&quot;: 49,
-    &quot;tableY&quot;: 130,
-    &quot;tableClass&quot;: &quot;models.GenericTable&quot;
+    "id": 145,
+    "label": "53",
+    "numberOfOccupants": 2,
+    "occupied": false,
+    "rotation": 0,
+    "x": 0,
+    "y": 0,
+    "tableId": 144,
+    "tableX": 49,
+    "tableY": 130,
+    "tableClass": "models.GenericTable"
   },
   {
-    &quot;id&quot;: 147,
-    &quot;label&quot;: &quot;55&quot;,
-    &quot;numberOfOccupants&quot;: 2,
-    &quot;occupied&quot;: false,
-    &quot;rotation&quot;: 90,
-    &quot;x&quot;: 0,
-    &quot;y&quot;: 0,
-    &quot;tableId&quot;: 146,
-    &quot;tableX&quot;: 56,
-    &quot;tableY&quot;: 126,
-    &quot;tableClass&quot;: &quot;models.GenericTable&quot;
+    "id": 147,
+    "label": "55",
+    "numberOfOccupants": 2,
+    "occupied": false,
+    "rotation": 90,
+    "x": 0,
+    "y": 0,
+    "tableId": 146,
+    "tableX": 56,
+    "tableY": 126,
+    "tableClass": "models.GenericTable"
   }, (...)
-]</code></pre>
-<p><br/> Então, com uma estrutura “planificada”, persistir os objetos é simples. O esquema de persistência é o seguinte:</p>
+]
+</code></pre>
+
+<p><br/>
+Então, com uma estrutura &#8220;planificada&#8221;, persistir os objetos é simples. O esquema de persistência é o seguinte:</p>
+
 <ul>
-<li>Uma <em>key</em> de place é formada por “layout”, seguido do id do layout, seguido de “place”, seguido do id do place. Por exemplo: “layout:1:place:109”.</li>
-<li>Um <strong>set</strong> é utilizado para guardar todas as <em>keys</em> de <em>Places</em>. Ou seja, esse set contém, por exemplo: [layout:1:place:109, layout:1:place:110, layout:1:place:111, (…)]</li>
-<li>Existe um método genérico, <code>getMultiplePlaces( idsArray )</code> para recuperar <strong>n</strong> lugares do banco, dado seus <em>id’s</em>.</li>
-<li>Existe um método que recupera <strong>todos</strong> os lugares do banco, utilizando o método <code>getMultiplePlaces</code> e o <strong>set</strong> que contém todos os <em>id’s</em>.</li>
+<li>Uma <em>key</em> de place é formada por &#8220;layout&#8221;, seguido do id do layout, seguido de &#8220;place&#8221;, seguido do id do place. Por exemplo: &#8220;layout:1:place:109&#8221;.</li>
+<li>Um <strong>set</strong> é utilizado para guardar todas as <em>keys</em> de <em>Places</em>. Ou seja, esse set contém, por exemplo:
+[layout:1:place:109, layout:1:place:110, layout:1:place:111, (&#8230;)]</li>
+<li>Existe um método genérico, <code>getMultiplePlaces( idsArray )</code> para recuperar <strong>n</strong> lugares do banco, dado seus <em>id&#8217;s</em>.</li>
+<li>Existe um método que recupera <strong>todos</strong> os lugares do banco, utilizando o método <code>getMultiplePlaces</code> e o <strong>set</strong> que contém todos os <em>id&#8217;s</em>.</li>
 </ul>
+
 <p>Agora, recuperar e persistir um ou múltiplos <em>Places</em> passa a ser trivial, graças a adequação do modelo de dados, e a persistência está implementada.</p>
-<h3 id="parte-5---medição-de-resultados">Parte 5 - Medição de resultados</h3>
-<h4 id="loc---número-de-linhas-de-código">LOC - Número de linhas de código</h4>
+
+<h3 id="parte5medioderesultados">Parte 5 - Medição de resultados</h3>
+
+<h4 id="locnmerodelinhasdecdigo">LOC - Número de linhas de código</h4>
+
 <p>Um dos grandes benefícios de se utilizar linguagens dinâmicas é a grande redução do número de linhas de código em relação a linguagens mais verborrágicas como Java.</p>
+
 <p>Utilizando o programa <a href="http://cloc.sourceforge.net/">cloc</a>, podemos observar alguns números interessantes.</p>
-<p>Language files blank comment code</p>
-<p>Java 24 237 32 <strong>1200</strong></p>
+
+<p>Language    files   blank   comment code</p>
+
+<p>Java        24  237 32      <strong>1200</strong></p>
+
 <p>Com as novas linguagens e as refatorações feitas, chegamos a um resultado incrível em nosso arquivo principal, <code>app.coffee</code>, que contém toda a lógica de API e Persistência:</p>
-<p>Language files blank comment code</p>
-<p>CoffeeScript 1 30 50 <strong>217</strong></p>
+
+<p>Language    files   blank   comment code</p>
+
+<p>CoffeeScript    1   30  50      <strong>217</strong></p>
+
 <p>Ou seja, uma redução de 5 vezes. Se, como diz Jeff Atwood, <a href="http://www.codinghorror.com/blog/2007/12/size-is-the-enemy.html">tamanho é o inimigo</a>, certamente houve progresso.</p>
+
 <p>Mas e quanto à performance? É possível detectar algum ganho ao utilizar o Node.js e REDIS versus Java e PostgreSQL?</p>
-<h4 id="performance---stress-test-requestssegundo">Performance - stress test requests/segundo</h4>
-<p>Utilizando o utilitário <a href="http://openwebload.sourceforge.net/">openload</a>, foram realizados testes de performance sobre as duas versões do aplicativo. Para o teste, realizamos chamadas concorrentes a uma URL que devolve todas as mesas do banco de dados, serializadas em JSON. Conforme esperado, a combinação de Node.js com Redis apresentou uma performance esmagadoramente maior que Java e PostgreSQL. No geral, foi observado uma diminuição de 20 vezes no tempo de resposta, e consequentemente, um aumento de 20 vezes no número de requests servidos.</p>
-<br/>
-<p style="text-align:center">
-Tempo de Resposta
-</p>
-<div class="figure">
-<img src="/articles/benvenuto-node/bn1.png" alt="Tempo de Resposta" /><p class="caption">Tempo de Resposta</p>
-</div>
-<br/>
-<p style="text-align:center">
-Número de Requests Servidos
-</p>
-<div class="figure">
-<img src="/articles/benvenuto-node/bn2.png" alt="Requests Servidos" /><p class="caption">Requests Servidos</p>
-</div>
-<br/>
-<h3 id="parte-6---conclusão">Parte 6 - Conclusão</h3>
-<h4 id="principais-benefícios-da-migração">Principais benefícios da migração</h4>
+
+<h4 id="performancestresstestrequestssegundo">Performance - stress test requests/segundo</h4>
+
+<p>Utilizando o utilitário <a href="http://openwebload.sourceforge.net/">openload</a>, foram realizados testes de performance sobre as duas versões do aplicativo.
+Para o teste, realizamos chamadas concorrentes a uma URL que devolve todas as mesas do banco de dados, serializadas em JSON.
+Conforme esperado, a combinação de Node.js com Redis apresentou uma performance esmagadoramente maior que Java e PostgreSQL.
+No geral, foi observado uma diminuição de 20 vezes no tempo de resposta, e consequentemente, um aumento de 20 vezes no número de requests servidos.</p>
+
+<p><br/></p>
+
+<p style="text-align:center">Tempo de Resposta</p>
+
+<p><img src="/articles/benvenuto-node/bn1.png" alt="Tempo de Resposta" title="" /></p>
+
+<p><br/></p>
+
+<p style="text-align:center">Número de Requests Servidos</p>
+
+<p><img src="/articles/benvenuto-node/bn2.png" alt="Requests Servidos" title="" /></p>
+
+<p><br/></p>
+
+<h3 id="parte6concluso">Parte 6 - Conclusão</h3>
+
+<h4 id="principaisbenefciosdamigrao">Principais benefícios da migração</h4>
+
 <p>A migração do Benvenuto culminou em muitas lições que, em última análise, podem ser traduzidas em uma noção simples: utilize a ferramenta certa para cada problema.</p>
-<p>Claramente, Node.js e suas bibliotecas nasceram para solucionar os problemas de desenvolvimento web, e, por isso, oferecem soluções muito mais naturais. Na persistência, é evidente que, dada a possibilidade, bancos chave-valor em memória são escolhas muito mais sensíveis para uma melhor performance do aplicativo.</p>
-<p>Acredito que o stack Java ainda vá sobreviver um longo tempo pois ele tem, de fato, muitos méritos como performance, estabilidade e um enorme ecossistema de bibliotecas. Entretanto, empresas novas e pequenas devem focar seus esforços nas novas tecnologias, que oferecem soluções muito mais efetivas para os problemas reais da web hoje. A escolha entre novas e velhas tecnologias não é uma opção. Utilizar a linguagem e o ambiente que vai solucionar seu problema de forma mais simples é imperativo.</p>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p>A technology stack comprises the layers of components or services that are used to provide a software solution or application.<a href="/articles/benvenuto-node/#fnref1">↩</a></p></li>
-<li id="fn2"><p>No ambiente Java de 2011, JBoss Seam e Spring MVC seriam os frameworks já considerados “tradicionais”, enquanto o Play Framework era relativamente novo e quebrava muitos paradigmas.<a href="/articles/benvenuto-node/#fnref2">↩</a></p></li>
-<li id="fn3"><p>An alternative plan that may be used in an emergency. Nesse contexto, uma tecnologia menos elegante ou menos performática mas que cumpre o mesmo papel.<a href="/articles/benvenuto-node/#fnref3">↩</a></p></li>
-<li id="fn4"><p>Denormalization is the process of attempting to optimize the read performance of a database by adding redundant data or by grouping data.<a href="/articles/benvenuto-node/#fnref4">↩</a></p></li>
-</ol>
-</div>
-</section>
+
+<p>Claramente, Node.js e suas bibliotecas nasceram para solucionar os problemas de desenvolvimento web, e, por isso, oferecem soluções muito mais naturais.
+Na persistência, é evidente que, dada a possibilidade, bancos chave-valor em memória são escolhas muito mais sensíveis para uma melhor performance do aplicativo.</p>
+
+<p>Acredito que o stack Java ainda vá sobreviver um longo tempo pois ele tem, de fato, muitos méritos como performance, estabilidade e um enorme ecossistema de bibliotecas.
+Entretanto, empresas novas e pequenas devem focar seus esforços nas novas tecnologias, que oferecem soluções muito mais efetivas para os problemas reais da web hoje.
+A escolha entre novas e velhas tecnologias não é uma opção. Utilizar a linguagem e o ambiente que vai solucionar seu problema de forma mais simples é imperativo.</p>
+
+<p><div class="footnotes"><hr /><ol><li id="fn1"><p>A technology stack comprises the layers of components or services that are used to provide a software solution or application.<a href="/articles/benvenuto-node/#fnref1">&#8617;</a></p></li><li id="fn2"><p>No ambiente Java de 2011, JBoss Seam e Spring MVC seriam os frameworks já considerados &#8220;tradicionais&#8221;, enquanto o Play Framework era relativamente novo e quebrava muitos paradigmas.<a href="/articles/benvenuto-node/#fnref2">&#8617;</a></p></li><li id="fn3"><p>An alternative plan that may be used in an emergency. Nesse contexto, uma tecnologia menos elegante ou menos performática mas que cumpre o mesmo papel.<a href="/articles/benvenuto-node/#fnref3">&#8617;</a></p></li><li id="fn4"><p>Denormalization is the process of attempting to optimize the read performance of a database by adding redundant data or by grouping data.<a href="/articles/benvenuto-node/#fnref4">&#8617;</a></p></li></ol></div></p></section>
       </article><a href="http://news.ycombinator.com/submit" class="hn-share-button">Discuss on Hacker News</a><br><a href="/" class="back"><< back to index</a>
     </div>
     <footer>
